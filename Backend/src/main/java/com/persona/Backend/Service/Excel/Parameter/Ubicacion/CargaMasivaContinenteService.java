@@ -19,63 +19,55 @@ import jakarta.transaction.Transactional;
 @Service
 public class CargaMasivaContinenteService implements ICargaMasivaContinenteService {
 
-    @Autowired
-    private IContinenteService continenteService;
+	@Autowired
+	private IContinenteService continenteService;
 
- // Expresión regular para permitir letras, números, espacios, y puntos
-    private static final String NOMBRE_VALIDO_REGEX = "^[\\p{L}0-9\\s\\.]+$"; 
+	private static final String NOMBRE_VALIDO_REGEX = "^[\\p{L}0-9\\s\\.]+$";
 
-    @Override
-    @Transactional
-    public void procesarExcelContinente(MultipartFile file) throws Exception {
-        List<String> errores = new ArrayList<>();
+	@Override
+	@Transactional
+	public void procesarExcelContinente(MultipartFile file) throws Exception {
+		List<String> errores = new ArrayList<>();
 
-        try {
-            // Leer el archivo Excel
-            List<ContinenteExcelDTO> continentesList = EasyExcel.read(file.getInputStream())
-                    .head(ContinenteExcelDTO.class)
-                    .sheet()
-                    .doReadSync();
+		try {
+			// Leer el archivo Excel
+			List<ContinenteExcelDTO> continentesList = EasyExcel.read(file.getInputStream())
+					.head(ContinenteExcelDTO.class).sheet().doReadSync();
 
-            for (ContinenteExcelDTO excelDTO : continentesList) {
+			for (ContinenteExcelDTO excelDTO : continentesList) {
 
-                // Validación de nombre
-                if (!Pattern.matches(NOMBRE_VALIDO_REGEX, excelDTO.getNombre())) {
-                    errores.add("El nombre del continente " + excelDTO.getNombre() + " contiene caracteres especiales.");
-                    continue;
-                }
+				// Validación de nombre
+				if (!Pattern.matches(NOMBRE_VALIDO_REGEX, excelDTO.getNombre())) {
+					errores.add(
+							"El nombre del continente " + excelDTO.getNombre() + " contiene caracteres especiales.");
+					continue;
+				}
 
-                // Verificación si el continente ya existe
-                Continente continenteExistente = continenteService.findByNombre(excelDTO.getNombre());
+				// Verificación si el continente ya existe
+				Continente continenteExistente = continenteService.findByNombre(excelDTO.getNombre());
 
-                if (continenteExistente != null) {
-                    // Si existe pero ha sido eliminado lógicamente
-                    if (continenteExistente.getDeletedAt() != null) {
-                        continenteExistente.setDeletedAt(null); // Reactivar el continente
-                        continenteExistente.setCodigo(excelDTO.getCodigo());
+				if (continenteExistente != null) {
+					// Si el continente ya existe, actualizamos los campos
+					continenteExistente.setCodigo(excelDTO.getCodigo());
+					continenteExistente.setDeletedAt(null); // Reactivar si estaba eliminado
+					continenteExistente.setState(true); // Asegurar que el estado es activo
+					continenteService.save(continenteExistente); // Aquí se actualiza correctamente
+				} else {
+					// Si no existe, crear un nuevo registro
+					Continente nuevoContinente = new Continente();
+					nuevoContinente.setNombre(excelDTO.getNombre());
+					nuevoContinente.setCodigo(excelDTO.getCodigo());
+					nuevoContinente.setState(true); // Estado por defecto activo
+					continenteService.save(nuevoContinente);
+				}
+			}
 
-                        continenteService.save(continenteExistente);
-                    } else {
-                        // Si el registro no está eliminado lógicamente, generar error
-                        errores.add("El continente " + excelDTO.getNombre() + " ya existe en la base de datos.");
-                    }
-                    continue;
-                }
+			if (!errores.isEmpty()) {
+				throw new Exception(String.join(", ", errores));
+			}
 
-                // Crear y guardar un nuevo continente
-                Continente continente = new Continente();
-                continente.setNombre(excelDTO.getNombre());
-                continente.setCodigo(excelDTO.getCodigo());
-
-                continenteService.save(continente);
-            }
-
-            if (!errores.isEmpty()) {
-                throw new Exception(String.join(", ", errores));
-            }
-
-        } catch (Exception e) {
-            throw new RuntimeException("Error al procesar el archivo Excel: " + e.getMessage());
-        }
-    }
+		} catch (Exception e) {
+			throw new RuntimeException("Error al procesar el archivo Excel: " + e.getMessage());
+		}
+	}
 }

@@ -30,12 +30,11 @@ export class ContinenteComponent implements OnInit {
   }
 
   initializeForm(): void {
-    // No incluimos 'state' en el formulario cuando se crea un nuevo continente
     this.continenteForm = this.fb.group({
-      id: [0],
+      id: [0],  // Asegurarnos de que la ID esté presente, 0 para nuevos registros
       nombre: ['', [Validators.required, Validators.minLength(3)]],
-      codigo: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]{3,}$')]], // Patrones más flexibles
-      state: [true],  // State siempre será true por defecto al crear
+      codigo: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]{3,}$')]],
+      state: [true],  // Estado por defecto al crear
       createdAt: [''],
       updatedAt: ['']
     });
@@ -107,7 +106,15 @@ export class ContinenteComponent implements OnInit {
 
   onEdit(item: any): void {
     this.isEditing = true;
-    this.continenteForm.patchValue(item);
+    // Si el campo createdAt es nulo, no lo incluimos en el formulario
+    this.continenteForm.patchValue({
+      id: item.id,
+      nombre: item.nombre,
+      codigo: item.codigo,
+      state: item.state,
+      createdAt: item.createdAt ? item.createdAt : undefined, // No pasar `null`
+      updatedAt: item.updatedAt
+    });
   }
 
   onDelete(id: number): void {
