@@ -16,16 +16,16 @@ public class Regional extends BaseEntity {
 	@Column(name = "nit", length = 45, nullable = false)
 	private String nit;
 
-	@Column(name = "nombre", length = 45, nullable = false)
+	@Column(name = "nombre", length = 45, nullable = true)
 	private String nombre;
 
 	@Column(name = "acronimo", length = 45, nullable = false)
 	private String acronimo;
 
-	@Column(name = "direccion", length = 45, nullable = false)
+	@Column(name = "direccion", length = 45, nullable = true)
 	private String direccion;
 
-	@Column(name = "telefono", length = 45, nullable = false)
+	@Column(name = "telefono", length = 45, nullable = true)
 	private String telefono;
 
 	@OneToOne(fetch = FetchType.EAGER, optional = false)

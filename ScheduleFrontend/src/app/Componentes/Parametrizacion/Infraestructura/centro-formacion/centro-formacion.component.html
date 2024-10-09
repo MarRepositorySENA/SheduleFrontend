@@ -3,36 +3,70 @@
 
   <!-- Formulario para Crear/Editar Centro de Formación -->
   <form [formGroup]="centroFormacionForm" (ngSubmit)="onSubmit()">
-    <div class="mb-3">
-      <label for="nombre" class="form-label">Nombre del Centro de Formación:</label>
-      <input type="text" id="nombre" class="form-control" formControlName="nombre" required>
-    </div>
-    <div class="mb-3">
-      <label for="direccion" class="form-label">Dirección:</label>
-      <input type="text" id="direccion" class="form-control" formControlName="direccion" required>
-    </div>
-    <div class="mb-3">
-      <label for="telefono" class="form-label">Teléfono:</label>
-      <input type="text" id="telefono" class="form-control" formControlName="telefono" required>
-    </div>
-    <div class="mb-3">
-      <label for="regional" class="form-label">Regional:</label>
-      <div formGroupName="regionalId">
-        <ng-select
-          [items]="regionales"
-          bindLabel="nombre"
-          bindValue="id"
-          formControlName="id"
-          placeholder="Seleccione una regional"
-          required>
-        </ng-select>
+    <div class="row">
+      <div class="col-md-4 mb-3 form-group">
+        <label for="nombre" class="form-label">Nombre:</label>
+        <input type="text" id="nombre" class="form-control" formControlName="nombre" [ngClass]="{'invalid': centroFormacionForm.get('nombre')?.invalid && centroFormacionForm.get('nombre')?.touched}" required>
+        <div *ngIf="centroFormacionForm.get('nombre')?.invalid && centroFormacionForm.get('nombre')?.touched" class="text-danger">
+          El nombre es obligatorio y debe tener al menos 3 caracteres.
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-3 form-group">
+        <label for="direccion" class="form-label">Dirección:</label>
+        <input type="text" id="direccion" class="form-control" formControlName="direccion" required>
+      </div>
+
+      <div class="col-md-4 mb-3 form-group">
+        <label for="telefono" class="form-label">Teléfono:</label>
+        <input type="text" id="telefono" class="form-control" formControlName="telefono" [ngClass]="{'invalid': centroFormacionForm.get('telefono')?.invalid && centroFormacionForm.get('telefono')?.touched}" required>
+        <div *ngIf="centroFormacionForm.get('telefono')?.invalid && centroFormacionForm.get('telefono')?.touched" class="text-danger">
+          El teléfono es obligatorio y debe tener entre 7 y 10 dígitos.
+        </div>
       </div>
     </div>
-    <div class="mb-3">
-      <label for="estado" class="form-label">Estado:</label>
-      <div class="form-check form-switch">
-        <input type="checkbox" class="form-check-input" id="estado" formControlName="state">
-        <label class="form-check-label" for="estado">{{ centroFormacionForm.get('state')?.value ? 'Activo' : 'Inactivo' }}</label>
+
+    <div class="row">
+      <div class="col-md-4 mb-3 form-group">
+        <label for="regional" class="form-label">Regional:</label>
+        <div formGroupName="regionalId">
+          <ng-select
+            [items]="regionales"
+            bindLabel="nombre"
+            bindValue="id"
+            formControlName="id"
+            placeholder="Seleccione una regional"
+            [ngClass]="{'invalid': centroFormacionForm.get('regionalId.id')?.invalid && centroFormacionForm.get('regionalId.id')?.touched}">
+          </ng-select>
+          <div *ngIf="centroFormacionForm.get('regionalId.id')?.invalid && centroFormacionForm.get('regionalId.id')?.touched" class="text-danger">
+            La regional es obligatoria.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-3 form-group">
+        <label for="ciudad" class="form-label">Ciudad:</label>
+        <div formGroupName="ciudadId">
+          <ng-select
+            [items]="ciudades"
+            bindLabel="nombre"
+            bindValue="id"
+            formControlName="id"
+            placeholder="Seleccione una ciudad"
+            [ngClass]="{'invalid': centroFormacionForm.get('ciudadId.id')?.invalid && centroFormacionForm.get('ciudadId.id')?.touched}">
+          </ng-select>
+          <div *ngIf="centroFormacionForm.get('ciudadId.id')?.invalid && centroFormacionForm.get('ciudadId.id')?.touched" class="text-danger">
+            La ciudad es obligatoria.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-3 form-group">
+        <label for="estado" class="form-label">Estado:</label>
+        <div class="form-check form-switch">
+          <input type="checkbox" class="form-check-input" id="estado" formControlName="state">
+          <label class="form-check-label" for="estado">{{ centroFormacionForm.get('state')?.value ? 'Activo' : 'Inactivo' }}</label>
+        </div>
       </div>
     </div>
 
@@ -46,6 +80,6 @@
 <div class="table-container mt-5">
   <h2 class="text-center mb-4">Lista de Centros de Formación</h2>
   <div class="table-responsive">
-    <app-table [headers]="headers" [data]="centrosFormacion" (edit)="editCentroFormacion($event)" (delete)="deleteCentroFormacion($event)"></app-table>
+    <app-table [headers]="headers" [data]="centrosFormacion" (edit)="updateCentroFormacion($event)" ></app-table>
   </div>
 </div>

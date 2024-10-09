@@ -9,7 +9,7 @@ import { CentroFormacionComponent } from '../../../Componentes/Parametrizacion/I
 
 const routes: Routes = [
   { path: 'registro_ambiente', component: AmbienteComponent },
-  { path: 'registro_centro-formacion', component: CentroFormacionComponent },
+  { path: 'registro_centro_formacion', component: CentroFormacionComponent },
   { path: 'registro_especialidad', component: EspecialidadComponent },
   { path: 'registro_piso', component: PisoComponent },
   { path: 'registro_regional', component: RegionalComponent },

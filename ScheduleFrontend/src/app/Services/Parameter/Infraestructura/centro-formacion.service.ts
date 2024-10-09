@@ -11,22 +11,22 @@ export class CentroFormacionService {
 
   constructor(private http: HttpClient) { }
 
-  // Obtiene todos los centros de formación sin eliminar
+  // Obtener centros de formación sin eliminar
   getCentrosFormacionSinEliminar(): Observable<CentroFormacion[]> {
     return this.http.get<CentroFormacion[]>(`${this.apiUrl}/consultarRegistrosSinEliminar`);
   }
 
-  // Crea un nuevo centro de formación
+  // Crear un nuevo centro de formación
   createCentroFormacion(centroFormacion: CentroFormacion): Observable<CentroFormacion> {
     return this.http.post<CentroFormacion>(this.apiUrl, centroFormacion);
   }
 
-  // Actualiza un centro de formación existente
+  // Actualizar un centro de formación
   updateCentroFormacion(centroFormacion: CentroFormacion): Observable<CentroFormacion> {
     return this.http.put<CentroFormacion>(`${this.apiUrl}/${centroFormacion.id}`, centroFormacion);
   }
 
-  // Elimina visualmente un centro de formación
+  // Eliminar visualmente un centro de formación
   deleteCentroFormacion(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }

@@ -5,4 +5,5 @@ import com.persona.Backend.IService.IBaseService;
 
 public interface IDepartamentoService extends IBaseService<Departamento>{
 
+	Departamento findByNombre(String nombre);
 }

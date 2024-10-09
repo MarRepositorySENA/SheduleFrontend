@@ -2,11 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DepartamentoService } from '../../../../Services/Parameter/Ubicacion/departamento.service';
 import { PaisService } from '../../../../Services/Parameter/Ubicacion/pais.service';
-import { Departamento } from '../../../../models/M-Parameter/Ubicacion/departamento';
-import { Pais } from '../../../../models/M-Parameter/Ubicacion/pais';
-import { ReactiveFormsModule } from '@angular/forms';
-import { NgSelectModule } from '@ng-select/ng-select';
-import { TableComponent } from '../../../Pages/table/table.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-departamento',
@@ -14,14 +10,15 @@ import { TableComponent } from '../../../Pages/table/table.component';
   styleUrls: ['./departamento.component.css']
 })
 export class DepartamentoComponent implements OnInit {
-  departamentos: Departamento[] = [];
-  paises: Pais[] = [];
-  departamentoForm!: FormGroup; // Formulario reactivo
+  departamentos: any[] = [];
+  paises: any[] = []; // Lista de países para el dropdown
+  departamentoForm!: FormGroup;
+  selectedFile!: File;  // Archivo seleccionado para la carga masiva
   isEditing: boolean = false;
   headers = [
     { title: 'Nombre', field: 'nombre' },
     { title: 'Código', field: 'codigo' },
-    { title: 'Pais', field: 'paisId.nombre' },
+    { title: 'País', field: 'paisId.nombre' },  // Mostramos el nombre del país
     { title: 'Estado', field: 'state' }
   ];
 
@@ -37,23 +34,18 @@ export class DepartamentoComponent implements OnInit {
     this.initializeForm();
   }
 
-  // Inicializa el formulario reactivo
   initializeForm(): void {
     this.departamentoForm = this.fb.group({
       id: [0],
-      nombre: ['', Validators.required],
-      codigo: ['', Validators.required],
-      paisId: this.fb.group({
-        id: [null, Validators.required]
-      }),
-      state: [true],
-      createdAt: [''],  // Añadir createdAt al formulario
-      updatedAt: ['']   // Añadir updatedAt al formulario
+      nombre: ['', [Validators.required, Validators.minLength(3)]],
+      codigo: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]{3,}$')]], // Patrones más flexibles
+      paisId: [null, [Validators.required]],  // Campo obligatorio
+      state: [true],  // Estado por defecto es true al crear
+      createdAt: [''],
+      updatedAt: ['']
     });
   }
-  
 
-  // Obtiene la lista de departamentos sin eliminar
   getDepartamentos(): void {
     this.departamentoService.getDepartamentosSinEliminar().subscribe(
       data => {
@@ -65,14 +57,10 @@ export class DepartamentoComponent implements OnInit {
     );
   }
 
-  // Obtiene la lista de países sin eliminar
   getPaises(): void {
-    this.paisService.getPaisSinEliminar().subscribe(
+    this.paisService.getPaisesSinEliminar().subscribe(
       data => {
-        this.paises = data.map(pais=>({
-          ...pais,
-          nombreCompleto:`${pais.nombre} (${pais.state ? 'Activo' : 'Inactivo'})` 
-        }))
+        this.paises = data;
       },
       error => {
         console.error('Error al obtener los países:', error);
@@ -80,95 +68,114 @@ export class DepartamentoComponent implements OnInit {
     );
   }
 
-  // Envía el formulario
   onSubmit(): void {
-    if (this.departamentoForm.valid) {
-      const departamento: Departamento = this.departamentoForm.value;
-      if (this.isEditing) {
-        this.updateDepartamento(departamento);
-      } else {
-        this.createDepartamento(departamento);
-      }
+    if (this.departamentoForm.invalid) {
+      Swal.fire('Error', 'Por favor, complete todos los campos obligatorios correctamente.', 'error');
+      return;
+    }
+
+    const departamento = this.departamentoForm.value;
+
+    if (this.isEditing) {
+      this.updateDepartamento(departamento);
+    } else {
+      this.createDepartamento(departamento);
     }
   }
 
-  // Crea un nuevo departamento
-  createDepartamento(departamento: Departamento): void {
+  createDepartamento(departamento: any): void {
     this.departamentoService.createDepartamento(departamento).subscribe(
       response => {
-        console.log('Departamento creado con éxito:', response);
+        Swal.fire('Éxito', 'Departamento creado con éxito.', 'success');
         this.getDepartamentos();
         this.resetForm();
       },
       error => {
-        console.error('Error al crear el departamento:', error);
+        Swal.fire('Error', 'Error al crear el departamento.', 'error');
       }
     );
   }
 
-  // Actualiza un departamento existente
-  updateDepartamento(departamento: Departamento): void {
-    const updatedDepartamento: Departamento = {
-      ...departamento,
-      updatedAt: new Date().toISOString() // Actualiza la fecha de actualización
-    };
-  
-    this.departamentoService.updateDepartamento(updatedDepartamento).subscribe(
+  updateDepartamento(departamento: any): void {
+    this.departamentoService.updateDepartamento(departamento).subscribe(
       response => {
-        console.log('Departamento actualizado con éxito:', response);
+        Swal.fire('Éxito', 'Departamento actualizado con éxito.', 'success');
         this.getDepartamentos();
         this.resetForm();
         this.isEditing = false;
       },
       error => {
-        console.error('Error al actualizar el departamento:', error);
+        Swal.fire('Error', 'Error al actualizar el departamento.', 'error');
       }
     );
   }
-  
 
-  // Edita un departamento seleccionado
-  editDepartamento(departamento: Departamento): void {
-    this.isEditing = true;
-    this.departamentoForm.patchValue({
-      id: departamento.id,
-      nombre: departamento.nombre,
-      codigo: departamento.codigo,
-      paisId: {
-        id: departamento.paisId?.id || null
-      },
-      state: departamento.state,
-      createdAt: departamento.createdAt,  // Mantén el valor de createdAt
-      updatedAt: departamento.updatedAt   // Mantén el valor de updatedAt
-    });
-  }
-  
-  deleteDepartamento(id: number): void {
-    const departamentoToDelete = this.departamentos.find(departamento => departamento.id === id);
-    if (departamentoToDelete) {
-      departamentoToDelete.deletedAt = new Date().toISOString();
-      this.departamentoService.updateDepartamento(departamentoToDelete).subscribe(
-        () => {
-          this.departamentos = this.departamentos.filter(departamento => departamento.id !== id);
-          console.log('Departamento eliminado visualmente');
-        },
-        error => {
-          console.error('Error al eliminar el departamento:', error);
-        }
-      );
-    }
-  }
-  
-
-  // Resetea el formulario para agregar o editar un nuevo departamento
   resetForm(): void {
     this.departamentoForm.reset({
       id: 0,
       nombre: '',
       codigo: '',
-      paisId: null,
-      state: true
+      paisId: null,  // Reseteamos el valor del dropdown
+      state: true  // Estado por defecto es true al crear
     });
     this.isEditing = false;
+  }
+
+  onEdit(item: any): void {
+    this.isEditing = true;
+    this.departamentoForm.patchValue({
+      id: item.id,
+      nombre: item.nombre,
+      codigo: item.codigo,
+      paisId: item.paisId.id,  // Asignar el ID del país, no el objeto completo
+      state: item.state
+    });
+  }
+
+  onDelete(id: number): void {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'No podrás revertir esto',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminarlo'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.departamentoService.deleteDepartamento(id).subscribe(
+          response => {
+            Swal.fire('Eliminado!', 'El departamento ha sido eliminado.', 'success');
+            this.getDepartamentos();  // Refresca la tabla
+          },
+          error => {
+            Swal.fire('Error', 'Error al eliminar el departamento.', 'error');
+          }
+        );
+      }
+    });
+  }
+
+  // Carga masiva: Al seleccionar el archivo
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0];
+  }
+
+  // Carga masiva: Sube el archivo Excel
+  uploadExcel(): void {
+    if (!this.selectedFile) {
+      Swal.fire('Error', 'Por favor seleccione un archivo Excel', 'error');
+      return;
+    }
+
+    this.departamentoService.cargarMasivo(this.selectedFile).subscribe(
+      response => {
+        Swal.fire('Éxito', 'Carga masiva completada con éxito', 'success');
+        this.getDepartamentos();  // Refrescar los datos después de la carga
+      },
+      error => {
+        Swal.fire('Error', error.error.message || 'Error durante la carga masiva', 'error');
+      }
+    );
   }
 }

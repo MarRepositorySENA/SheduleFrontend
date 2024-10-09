@@ -1,15 +1,15 @@
-// models/Parameter/Ubicacion/pais.ts
 export interface Pais {
     id: number;
-    nombre: string;
-    codigo: string;
-    state: boolean;
+    state?: boolean;
     createdAt?: string;
     updatedAt?: string;
     deletedAt?: string | null;
+    nombre: string;
+    codigo?: string;
     continenteId: {
-        id: number,
-        nombre?: string
+      id: number;
+      nombre: string;
+      codigo: string;
     };
   }
   

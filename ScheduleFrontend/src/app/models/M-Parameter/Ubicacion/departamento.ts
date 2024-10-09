@@ -1,13 +1,14 @@
 export interface Departamento {
   id: number;
-  nombre: string;
-  codigo: string;
-  state: boolean;
+  state?: boolean;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string | null;
+  nombre: string;
+  codigo?: string;
   paisId: {
-    id: number,
-    nombre?: string
+    id: number;
+    nombre: string;
+    codigo: string;
   };
 }

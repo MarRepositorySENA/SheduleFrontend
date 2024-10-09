@@ -5,4 +5,7 @@ import com.persona.Backend.IService.IBaseService;
 
 public interface IPaisService extends IBaseService<Pais>{
 
+	 Pais findByNombre(String nombre);
+	 
+	 
 }

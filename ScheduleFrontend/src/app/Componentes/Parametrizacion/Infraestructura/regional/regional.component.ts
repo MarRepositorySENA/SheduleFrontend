@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RegionalService } from '../../../../Services/Parameter/Infraestructura/regional.service';
+import { DepartamentoService } from '../../../../Services/Parameter/Ubicacion/departamento.service';
 import { Regional } from '../../../../models/M-Parameter/infraestructura/regional';
+import { Departamento } from '../../../../models/M-Parameter/Ubicacion/departamento';
 
 @Component({
   selector: 'app-regional',
@@ -10,6 +12,7 @@ import { Regional } from '../../../../models/M-Parameter/infraestructura/regiona
 })
 export class RegionalComponent implements OnInit {
   regionales: Regional[] = [];
+  departamentos: Departamento[] = [];
   regionalForm!: FormGroup;
   isEditing: boolean = false;
   headers = [
@@ -18,27 +21,35 @@ export class RegionalComponent implements OnInit {
     { title: 'Acrónimo', field: 'acronimo' },
     { title: 'Dirección', field: 'direccion' },
     { title: 'Teléfono', field: 'telefono' },
+    { title: 'Departamento', field: 'departamentoId.nombre' },
+    { title: 'País', field: 'departamentoId.paisId.nombre' },
+    { title: 'Continente', field: 'departamentoId.paisId.continenteId.nombre' },
     { title: 'Estado', field: 'state' }
   ];
 
   constructor(
     private fb: FormBuilder,
-    private regionalService: RegionalService
+    private regionalService: RegionalService,
+    private departamentoService: DepartamentoService
   ) {}
 
   ngOnInit(): void {
     this.getRegionales();
+    this.getDepartamentos();
     this.initializeForm();
   }
 
   initializeForm(): void {
     this.regionalForm = this.fb.group({
       id: [0],
-      nit: ['', Validators.required],
-      nombre: ['', Validators.required],
-      acronimo: ['', Validators.required],
+      nit: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Solo números para el NIT
+      nombre: ['', [Validators.required, Validators.minLength(3)]], // Nombre obligatorio, al menos 3 caracteres
+      acronimo: ['', [Validators.required, Validators.maxLength(5)]], // Acrónimo obligatorio, máximo 5 caracteres
       direccion: ['', Validators.required],
-      telefono: ['', Validators.required],
+      telefono: ['', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]], // Teléfono debe ser de 7 a 10 dígitos
+      departamentoId: this.fb.group({
+        id: [null, Validators.required]
+      }),
       state: [true],
       createdAt: [''],
       updatedAt: ['']
@@ -56,14 +67,28 @@ export class RegionalComponent implements OnInit {
     );
   }
 
-  onSubmit(): void {
-    if (this.regionalForm.valid) {
-      const regional: Regional = this.regionalForm.value;
-      if (this.isEditing) {
-        this.updateRegional(regional);
-      } else {
-        this.createRegional(regional);
+  getDepartamentos(): void {
+    this.departamentoService.getDepartamentosSinEliminar().subscribe(
+      data => {
+        this.departamentos = data;
+      },
+      error => {
+        console.error('Error al obtener los departamentos:', error);
       }
+    );
+  }
+
+  onSubmit(): void {
+    if (this.regionalForm.invalid) {
+      alert('Por favor, complete todos los campos obligatorios correctamente.');
+      return;
+    }
+
+    const regional: Regional = this.regionalForm.value;
+    if (this.isEditing) {
+      this.updateRegional(regional);
+    } else {
+      this.createRegional(regional);
     }
   }
 
@@ -73,7 +98,7 @@ export class RegionalComponent implements OnInit {
 
     this.regionalService.createRegional(regional).subscribe(
       response => {
-        console.log('Regional creada con éxito:', response);
+        alert('Regional creada con éxito.');
         this.getRegionales();
         this.resetForm();
       },
@@ -91,7 +116,7 @@ export class RegionalComponent implements OnInit {
 
     this.regionalService.updateRegional(updatedRegional).subscribe(
       response => {
-        console.log('Regional actualizada con éxito:', response);
+        alert('Regional actualizada con éxito.');
         this.getRegionales();
         this.resetForm();
         this.isEditing = false;
@@ -111,6 +136,9 @@ export class RegionalComponent implements OnInit {
       acronimo: regional.acronimo,
       direccion: regional.direccion,
       telefono: regional.telefono,
+      departamentoId: {
+        id: regional.departamentoId?.id || null
+      },
       state: regional.state,
       createdAt: regional.createdAt,
       updatedAt: regional.updatedAt
@@ -123,7 +151,7 @@ export class RegionalComponent implements OnInit {
       regionalToDelete.deletedAt = new Date().toISOString();
       this.regionalService.updateRegional(regionalToDelete).subscribe(
         () => {
-          console.log('Regional eliminada visualmente');
+          alert('Regional eliminada visualmente.');
           this.getRegionales();
         },
         error => {
@@ -141,6 +169,7 @@ export class RegionalComponent implements OnInit {
       acronimo: '',
       direccion: '',
       telefono: '',
+      departamentoId: { id: null },
       state: true
     });
     this.isEditing = false;

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ContinenteService } from '../../../../Services/Parameter/Ubicacion/continente.service';
-import { Continente } from '../../../../models/M-Parameter/Ubicacion/continente';
-
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-continente',
@@ -9,112 +9,152 @@ import { Continente } from '../../../../models/M-Parameter/Ubicacion/continente'
   styleUrls: ['./continente.component.css']
 })
 export class ContinenteComponent implements OnInit {
-  continentes: Continente[] = [];
-  selectedContinente: Continente = {
-    id: 0,
-    nombre: '',
-    codigo: '',
-    state: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    deletedAt: undefined
-  };
+  continentes: any[] = [];
+  continenteForm!: FormGroup;
+  selectedFile!: File;  // Archivo seleccionado para la carga masiva
   isEditing: boolean = false;
+  headers = [
+    { title: 'Nombre', field: 'nombre' },
+    { title: 'Código', field: 'codigo' },
+    { title: 'Estado', field: 'state' }
+  ];
 
-  constructor(private continenteService: ContinenteService) {}
+  constructor(
+    private fb: FormBuilder,
+    private continenteService: ContinenteService
+  ) {}
 
   ngOnInit(): void {
     this.getContinentes();
+    this.initializeForm();
   }
 
-  getContinentes(): void {
-    this.continenteService.getContinentes().subscribe(data => {
-      // Filtrar solo continentes que no han sido eliminados
-      this.continentes = data.filter(continente => continente.deletedAt === null || continente.deletedAt === undefined);
-    }, error => {
-      console.error('Error al obtener los continentes:', error);
+  initializeForm(): void {
+    // No incluimos 'state' en el formulario cuando se crea un nuevo continente
+    this.continenteForm = this.fb.group({
+      id: [0],
+      nombre: ['', [Validators.required, Validators.minLength(3)]],
+      codigo: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]{3,}$')]], // Patrones más flexibles
+      state: [true],  // State siempre será true por defecto al crear
+      createdAt: [''],
+      updatedAt: ['']
     });
   }
 
-  onSubmit(): void {
-    if (this.isEditing) {
-      this.updateContinente();
-    } else {
-      this.createContinente();
-    }
-  }
-
-  createContinente(): void {
-    this.selectedContinente.createdAt = new Date().toISOString();
-    this.selectedContinente.updatedAt = new Date().toISOString();
-    this.continenteService.createContinente(this.selectedContinente).subscribe(
-      response => {
-        this.getContinentes();
-        this.resetForm();
+  getContinentes(): void {
+    this.continenteService.getContinentesSinEliminar().subscribe(
+      data => {
+        this.continentes = data;
       },
       error => {
-        console.error('Error al crear el continente:', error);
+        console.error('Error al obtener los continentes:', error);
       }
     );
   }
 
-  updateContinente(): void {
-    this.selectedContinente.updatedAt = new Date().toISOString();
-    this.continenteService.updateContinente(this.selectedContinente).subscribe(
+  onSubmit(): void {
+    if (this.continenteForm.invalid) {
+      Swal.fire('Error', 'Por favor, complete todos los campos obligatorios correctamente.', 'error');
+      return;
+    }
+
+    const continente = this.continenteForm.value;
+
+    if (this.isEditing) {
+      this.updateContinente(continente);
+    } else {
+      this.createContinente(continente);
+    }
+  }
+
+  createContinente(continente: any): void {
+    continente.state = true;  // Estado por defecto es true
+    this.continenteService.createContinente(continente).subscribe(
       response => {
+        Swal.fire('Éxito', 'Continente creado con éxito.', 'success');
+        this.getContinentes();
+        this.resetForm();
+      },
+      error => {
+        Swal.fire('Error', 'Error al crear el continente.', 'error');
+      }
+    );
+  }
+
+  updateContinente(continente: any): void {
+    this.continenteService.updateContinente(continente).subscribe(
+      response => {
+        Swal.fire('Éxito', 'Continente actualizado con éxito.', 'success');
         this.getContinentes();
         this.resetForm();
         this.isEditing = false;
       },
       error => {
-        console.error('Error al actualizar el continente:', error);
-      }
-    );
-  }
-
-  editContinente(continente: Continente): void {
-    this.selectedContinente = { ...continente };
-    this.isEditing = true;
-  }
-
-  deleteContinente(id: number): void {
-    const continenteToDelete = this.continentes.find(continente => continente.id === id);
-    if (continenteToDelete) {
-      continenteToDelete.deletedAt = new Date().toISOString();
-      this.continenteService.updateContinente(continenteToDelete).subscribe(() => {
-        // Refrescar la lista de continentes visualmente sin el eliminado
-        this.continentes = this.continentes.filter(continente => continente.id !== id);
-        console.log('Continente eliminado visualmente');
-      }, error => {
-        console.error('Error al eliminar el continente:', error);
-      });
-    }
-  }
-
-  toggleEstado(continente: Continente): void {
-    continente.state = !continente.state;
-    continente.updatedAt = new Date().toISOString();
-    this.continenteService.updateContinente(continente).subscribe(
-      response => {
-        console.log('Estado del continente actualizado', response);
-      },
-      error => {
-        console.error('Error al actualizar el estado:', error);
+        Swal.fire('Error', 'Error al actualizar el continente.', 'error');
       }
     );
   }
 
   resetForm(): void {
-    this.selectedContinente = {
+    this.continenteForm.reset({
       id: 0,
       nombre: '',
       codigo: '',
-      state: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      deletedAt: undefined
-    };
+      state: true  // Estado por defecto es true al crear
+    });
     this.isEditing = false;
   }
 
+  onEdit(item: any): void {
+    this.isEditing = true;
+    this.continenteForm.patchValue(item);
+  }
+
+  onDelete(id: number): void {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'No podrás revertir esto',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminarlo'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.continenteService.deleteContinente(id).subscribe(
+          response => {
+            Swal.fire('Eliminado!', 'El continente ha sido eliminado.', 'success');
+            this.getContinentes();  // Refresca la tabla
+          },
+          error => {
+            Swal.fire('Error', 'Error al eliminar el continente.', 'error');
+          }
+        );
+      }
+    });
+  }
+
+  // Carga masiva: Al seleccionar el archivo
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0];
+  }
+
+  // Carga masiva: Sube el archivo Excel
+  uploadExcel(): void {
+    if (!this.selectedFile) {
+      Swal.fire('Error', 'Por favor seleccione un archivo Excel', 'error');
+      return;
+    }
+
+    this.continenteService.cargarMasivo(this.selectedFile).subscribe(
+      response => {
+        Swal.fire('Éxito', 'Carga masiva completada con éxito', 'success');
+        this.getContinentes();  // Refrescar los datos después de la carga
+      },
+      error => {
+        // Mostrar el mensaje de error devuelto por el backend
+        Swal.fire('Error', error.error.message || 'Error durante la carga masiva', 'error');
+      }
+    );
+  }
 }

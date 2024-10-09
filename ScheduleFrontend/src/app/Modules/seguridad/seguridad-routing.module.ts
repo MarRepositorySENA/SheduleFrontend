@@ -16,7 +16,7 @@ const routes: Routes = [
   { path: 'registro_vista', component: VistaComponent },
   { path: 'registro_vistas-roles', component: VistasRolesComponent },
   { path: 'registro_persona-usuario', component: PersonaUsuarioComponent },
-  { path: 'registros_usuarios', component: CargaMasivaComponent },
+  { path: 'registros_usuario', component: CargaMasivaComponent },
 ];
 @NgModule({
   imports: [RouterModule.forChild(routes)],
