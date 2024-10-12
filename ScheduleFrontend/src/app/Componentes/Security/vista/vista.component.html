@@ -1,52 +1,60 @@
-<div class="container mt-5">
-  <h2 class="text-center mb-4">{{ isEditing ? 'Editar Vista' : 'Registrar Vista' }}</h2>
-
+<div class="form-carga-container">
   <!-- Formulario para Crear/Editar Vista -->
-  <form [formGroup]="vistaForm" (ngSubmit)="onSubmit()">
-    <div class="mb-3">
-      <label for="nombre" class="form-label">Nombre de la Vista:</label>
-      <input type="text" id="nombre" class="form-control" formControlName="nombre" required>
-    </div>
-    <div class="mb-3">
-      <label for="descripcion" class="form-label">Descripción:</label>
-      <input type="text" id="descripcion" class="form-control" formControlName="descripcion" required>
-    </div>
-    <div class="mb-3">
-      <label for="ruta" class="form-label">Ruta:</label>
-      <input type="text" id="ruta" class="form-control" formControlName="ruta" required>
-    </div>
-    <div class="mb-3">
-      <label for="modulo" class="form-label">Módulo:</label>
-      <div formGroupName="moduloId">
-        <ng-select 
-          [items]="modulos"
-          bindLabel="nombreCompleto"
-          bindValue="id"
-          formControlName="id"
-          placeholder="Seleccione un módulo"
-          required>
-        </ng-select>
-      </div>
-    </div>
-    <div class="mb-3">
-      <label for="estado" class="form-label">Estado:</label>
-      <div class="form-check form-switch">
-        <input type="checkbox" class="form-check-input" id="estado" formControlName="state">
-        <label class="form-check-label" for="estado">{{ vistaForm.get('state')?.value ? 'Activo' : 'Inactivo' }}</label>
-      </div>
-    </div>
+  <div class="form-container">
+    <h2 class="text-center mb-4">{{ isEditing ? 'Editar Vista' : 'Registrar Vista' }}</h2>
 
-    <div class="modal-footer d-flex justify-content-center">
-      <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
-    </div>
-  </form>
+    <form [formGroup]="vistaForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre:</label>
+        <input type="text" id="nombre" class="form-control" formControlName="nombre">
+      </div>
+
+      <div class="mb-3">
+        <label for="descripcion" class="form-label">Descripción:</label>
+        <textarea id="descripcion" class="form-control" formControlName="descripcion"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label for="ruta" class="form-label">Ruta:</label>
+        <input type="text" id="ruta" class="form-control" formControlName="ruta">
+      </div>
+
+      <div class="mb-3">
+        <label for="moduloId" class="form-label">Módulo:</label>
+        <select id="moduloId" class="form-control" formControlName="moduloId">
+          <option *ngFor="let modulo of modulos" [value]="modulo.id">
+            {{ modulo.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Mostrar estado solo si estamos editando -->
+      <div *ngIf="isEditing" class="mb-3">
+        <label for="estado" class="form-label">Estado:</label>
+        <div class="form-check form-switch">
+          <input type="checkbox" class="form-check-input" id="state" formControlName="state">
+          <label class="form-check-label" for="state">{{ vistaForm.get('state')?.value ? 'Activo' : 'Inactivo' }}</label>
+        </div>
+      </div>
+
+      <div class="modal-footer d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Sección de carga masiva al lado del formulario -->
+  <div class="carga-masiva-container">
+    <h3>Carga Masiva</h3>
+    <input type="file" (change)="onFileSelected($event)" class="form-control">
+    <button class="btn btn-success mt-3" (click)="uploadExcel()">Subir Excel</button>
+  </div>
 </div>
 
-<!-- Tabla de Vistas -->
+<!-- Tabla dinámica para mostrar las vistas -->
 <div class="table-container mt-5">
   <h2 class="text-center mb-4">Lista de Vistas</h2>
   <div class="table-responsive">
-    <app-table [headers]="headers" [data]="vistas" (edit)="editVista($event)" (delete)="deleteVista($event)">
-    </app-table>
+    <app-table [headers]="headers" [data]="vistas" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-table>
   </div>
 </div>

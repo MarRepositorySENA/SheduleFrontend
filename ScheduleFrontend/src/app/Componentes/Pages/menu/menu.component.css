@@ -4,23 +4,31 @@
   padding: 15px;
   color: white;
   position: fixed;
-  top: 60px; /* Debajo del navbar */
+  top: 60px;
   bottom: 0;
   left: 0;
   overflow-y: auto;
 }
 
+.user-info {
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: white;
+}
+
+.user-info p {
+  margin: 0;
+  padding: 5px 0;
+}
 
 .menu {
   list-style-type: none;
   padding: 0;
 }
 
-
 .menu > li {
   margin-bottom: 10px;
 }
-
 
 .menu a {
   color: white;
@@ -28,34 +36,62 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
+  padding: 12px;
   border-radius: 4px;
+  font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+.menu a i {
+  margin-right: 10px;
+}
 
 .menu a:hover {
   background-color: #39A900;
 }
 
-
 .submenu {
   list-style-type: none;
-  padding-left: 15px;
-  display: none;
+  padding-left: 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-out;
 }
 
-
-.menu > li:hover .submenu {
-  display: block;
+.menu li.expanded .submenu {
+  max-height: 500px;
+  background-color: #004960;
 }
-
 
 .submenu li a {
   padding: 8px 10px;
   display: block;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
 }
 
-
+/* Hover en verde para submódulos */
 .submenu li a:hover {
-  background-color: #00688B; /*/72E000* por si lo manejo con verde*/
+  background-color: #00B3B3;  /* Color verdecito */
+  color: white;
+}
+/* Hover con azul claro para las vistas */
+.submenu li ul.submenu li a:hover {
+  background-color: #8FA3BF; /* Azul claro suave */
+  color: white;
+}
+/* Flechas de expansión */
+.fa {
+  font-size: 12px;
+  color: white;
+}
+
+.fa-chevron-down, .fa-chevron-right {
+  margin-left: auto;
+  font-size: 12px;
+  transition: transform 0.3s ease;
+}
+
+.menu li.expanded .fa-chevron-down {
+  transform: rotate(180deg);
 }

@@ -1,14 +1,49 @@
-<nav class="sidebar" [ngStyle]="{'background-color': '#004455'}">
+<div class="sidebar">
+  <!-- Mostrar el usuario y el rol -->
+  <div class="user-info">
+    <p>{{ usuario }}</p>
+    <p>Rol: {{ rol }}</p>
+  </div>
+
   <ul class="menu">
-    <li *ngFor="let modulo of modulos">
-      <a href="javascript:void(0)">
-        <i [class]="modulo.icono"></i> {{ modulo.nombre }} <span>&#9662;</span>
-      </a>
-      <ul class="submenu">
-        <li *ngFor="let vista of modulo.vistas">
-          <a [routerLink]="vista.ruta">{{ vista.nombre }}</a>
-        </li>
-      </ul>
+    <li *ngFor="let modulo of modulos" [class.expanded]="modulo.expanded">
+      <!-- Si el módulo tiene submódulos -->
+      <ng-container *ngIf="modulo.submodulos && modulo.submodulos.length > 0; else noSubmodulos">
+        <a (click)="toggleModuleExpansion(modulo)">
+          <i [class]="modulo.icono"></i> 
+          <span>{{ modulo.nombre }}</span>
+          <i class="fa" [class.fa-chevron-down]="modulo.expanded" [class.fa-chevron-right]="!modulo.expanded"></i>
+        </a>
+        <ul class="submenu" *ngIf="modulo.expanded">
+          <li *ngFor="let submodulo of modulo.submodulos" [class.expanded]="submodulo.expanded">
+            <a (click)="toggleSubmoduleExpansion(submodulo)">
+              <i [class]="submodulo.icono"></i> 
+              <span>{{ submodulo.nombre }}</span>
+              <i class="fa" [class.fa-chevron-down]="submodulo.expanded" [class.fa-chevron-right]="!submodulo.expanded"></i>
+            </a>
+            <ul class="submenu" *ngIf="submodulo.expanded">
+              <li *ngFor="let vista of submodulo.vistas">
+                <a [routerLink]="vista.ruta">{{ vista.nombre }}</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </ng-container>
+
+      <!-- Si el módulo no tiene submódulos -->
+      <ng-template #noSubmodulos>
+        <a (click)="toggleModuleExpansion(modulo)">
+          <i [class]="modulo.icono"></i> 
+          <span>{{ modulo.nombre }}</span>
+          <!-- Mostramos la flecha para módulos sin submódulos también -->
+          <i class="fa" [class.fa-chevron-down]="modulo.expanded" [class.fa-chevron-right]="!modulo.expanded"></i>
+        </a>
+        <ul class="submenu" *ngIf="modulo.expanded">
+          <li *ngFor="let vista of modulo.vistas">
+            <a [routerLink]="vista.ruta">{{ vista.nombre }}</a>
+          </li>
+        </ul>
+      </ng-template>
     </li>
   </ul>
-</nav>
+</div>

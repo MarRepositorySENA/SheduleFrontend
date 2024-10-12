@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PaisService } from '../../../../Services/Parameter/Ubicacion/pais.service';
 import { ContinenteService } from '../../../../Services/Parameter/Ubicacion/continente.service';
 import Swal from 'sweetalert2';
+import { Pais } from '../../../../models/M-Parameter/Ubicacion/pais';
+import { Continente } from '../../../../models/M-Parameter/Ubicacion/continente';
 
 @Component({
   selector: 'app-pais',
@@ -10,15 +12,15 @@ import Swal from 'sweetalert2';
   styleUrls: ['./pais.component.css']
 })
 export class PaisComponent implements OnInit {
-  paises: any[] = [];
-  continentes: any[] = []; // Lista de continentes para el dropdown
+  paises: Pais[] = [];
+  continentes: Continente[] = []; // Relación foránea con Continente
   paisForm!: FormGroup;
-  selectedFile!: File;  // Archivo seleccionado para la carga masiva
+  selectedFile!: File; // Para la carga masiva
   isEditing: boolean = false;
   headers = [
     { title: 'Nombre', field: 'nombre' },
     { title: 'Código', field: 'codigo' },
-    { title: 'Continente', field: 'continenteId.nombre' },  // Mostramos el nombre del continente
+    { title: 'Continente', field: 'continenteId.nombre' }, // Mostrar el nombre del continente
     { title: 'Estado', field: 'state' }
   ];
 
@@ -30,7 +32,7 @@ export class PaisComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPaises();
-    this.getContinentes();
+    this.getContinentes(); // Cargar los continentes
     this.initializeForm();
   }
 
@@ -38,9 +40,9 @@ export class PaisComponent implements OnInit {
     this.paisForm = this.fb.group({
       id: [0],
       nombre: ['', [Validators.required, Validators.minLength(3)]],
-      codigo: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]{3,}$')]], // Patrones más flexibles
-      continenteId: [null, [Validators.required]],  // Campo obligatorio
-      state: [true],  // Estado por defecto es true al crear
+      codigo: ['', Validators.required],
+      continenteId: [null, Validators.required], // Llave foránea con Continente
+      state: [true, Validators.required],
       createdAt: [''],
       updatedAt: ['']
     });
@@ -69,15 +71,13 @@ export class PaisComponent implements OnInit {
   }
 
   onSubmit(): void {
-    // Verificar si el formulario es válido
     if (this.paisForm.invalid) {
-      Swal.fire('Error', 'Por favor, complete todos los campos obligatorios correctamente.', 'error');
+      Swal.fire('Error', 'Por favor complete todos los campos obligatorios.', 'error');
       return;
     }
-  
-    const pais = this.paisForm.value;
-  
-    // Verificar si es una edición o una creación
+
+    const pais: Pais = this.paisForm.value;
+
     if (this.isEditing) {
       this.updatePais(pais);
     } else {
@@ -85,7 +85,10 @@ export class PaisComponent implements OnInit {
     }
   }
 
-  createPais(pais: any): void {
+  createPais(pais: Pais): void {
+    pais.createdAt = new Date().toISOString();
+    pais.updatedAt = new Date().toISOString();
+
     this.paisService.createPais(pais).subscribe(
       response => {
         Swal.fire('Éxito', 'País creado con éxito.', 'success');
@@ -93,13 +96,19 @@ export class PaisComponent implements OnInit {
         this.resetForm();
       },
       error => {
+        console.error('Error al crear el país:', error);
         Swal.fire('Error', 'Error al crear el país.', 'error');
       }
     );
   }
 
-  updatePais(pais: any): void {
-    this.paisService.updatePais(pais).subscribe(
+  updatePais(pais: Pais): void {
+    const updatedPais: Pais = {
+      ...pais,
+      updatedAt: new Date().toISOString()
+    };
+
+    this.paisService.updatePais(updatedPais).subscribe(
       response => {
         Swal.fire('Éxito', 'País actualizado con éxito.', 'success');
         this.getPaises();
@@ -107,6 +116,7 @@ export class PaisComponent implements OnInit {
         this.isEditing = false;
       },
       error => {
+        console.error('Error al actualizar el país:', error);
         Swal.fire('Error', 'Error al actualizar el país.', 'error');
       }
     );
@@ -117,74 +127,81 @@ export class PaisComponent implements OnInit {
       id: 0,
       nombre: '',
       codigo: '',
-      continenteId: null,  // Reseteamos el valor del dropdown
-      state: true  // Estado por defecto es true al crear
+      continenteId: null,
+      state: true
     });
     this.isEditing = false;
   }
 
-  onEdit(item: any): void {
+  onEdit(item: Pais): void {
     this.isEditing = true;
-  
-    // Verificar si ya se cargaron los continentes
-    if (this.continentes.length === 0) {
-      // Si los continentes no están cargados, cargarlos antes de editar
-      this.getContinentes();
-    }
-  
-    // Llenar el formulario con los datos del país seleccionado
     this.paisForm.patchValue({
       id: item.id,
       nombre: item.nombre,
       codigo: item.codigo,
-      continenteId: item.continenteId.id,  // Asignar solo el ID del continente
-      state: item.state
+      continenteId: item.continenteId.id, // Relación con continente por ID
+      state: item.state,
+      createdAt: item.createdAt || new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     });
   }
 
   onDelete(id: number): void {
-    Swal.fire({
-      title: '¿Estás seguro?',
-      text: 'No podrás revertir esto',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, eliminarlo'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.paisService.deletePais(id).subscribe(
-          response => {
-            Swal.fire('Eliminado!', 'El país ha sido eliminado.', 'success');
-            this.getPaises();  // Refresca la tabla
-          },
-          error => {
-            Swal.fire('Error', 'Error al eliminar el país.', 'error');
+    // Verificar dependencias antes de eliminar el país
+    this.paisService.getPaises().subscribe(
+      response => {
+        const paisRelacionado = response.some(p => p.id === id);
+        if (paisRelacionado) {
+          Swal.fire('Error', 'No se puede eliminar el país porque tiene dependencias.', 'error');
+          return;
+        }
+        Swal.fire({
+          title: '¿Estás seguro?',
+          text: 'No podrás revertir esto',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sí, eliminarlo'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.paisService.deletePais(id).subscribe(
+              response => {
+                Swal.fire('Eliminado!', 'El país ha sido eliminado.', 'success');
+                this.getPaises();
+              },
+              error => {
+                console.error('Error al eliminar el país:', error);
+                Swal.fire('Error', 'Error al eliminar el país.', 'error');
+              }
+            );
           }
-        );
+        });
+      },
+      error => {
+        console.error('Error al verificar dependencias del país:', error);
       }
-    });
+    );
   }
 
-  // Carga masiva: Al seleccionar el archivo
   onFileSelected(event: any): void {
     this.selectedFile = event.target.files[0];
   }
 
-  // Carga masiva: Sube el archivo Excel
   uploadExcel(): void {
     if (!this.selectedFile) {
-      Swal.fire('Error', 'Por favor seleccione un archivo Excel', 'error');
+      Swal.fire('Error', 'Por favor seleccione un archivo Excel.', 'error');
       return;
     }
 
     this.paisService.cargarMasivo(this.selectedFile).subscribe(
       response => {
-        Swal.fire('Éxito', 'Carga masiva completada con éxito', 'success');
-        this.getPaises();  // Refrescar los datos después de la carga
+        Swal.fire('Éxito', 'Carga masiva completada con éxito.', 'success');
+        this.getPaises();
       },
       error => {
-        Swal.fire('Error', error.error.message || 'Error durante la carga masiva', 'error');
+        console.error('Error durante la carga masiva:', error);
+        Swal.fire('Error', error.error.message || 'Error durante la carga masiva.', 'error');
       }
     );
   }

@@ -1,0 +1,55 @@
+<div class="form-carga-container">
+    <!-- Formulario para Crear/Editar Relación RAP-Competencia -->
+    <div class="form-container">
+      <h2 class="text-center mb-4">{{ isEditing ? 'Editar Relación RAP-Competencia' : 'Registrar Relación RAP-Competencia' }}</h2>
+  
+      <form [formGroup]="rapsCompetenciasForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="rapId" class="form-label">RAP:</label>
+          <select id="rapId" class="form-control" formControlName="rapId">
+            <option *ngFor="let rap of raps" [value]="rap.id">
+              {{ rap.descripcion }}
+            </option>
+          </select>
+        </div>
+  
+        <div class="mb-3">
+          <label for="competenciaId" class="form-label">Competencia:</label>
+          <select id="competenciaId" class="form-control" formControlName="competenciaId">
+            <option *ngFor="let competencia of competencias" [value]="competencia.id">
+              {{ competencia.nombre }}
+            </option>
+          </select>
+        </div>
+  
+        <!-- Mostrar estado solo si estamos editando -->
+        <div *ngIf="isEditing" class="mb-3">
+          <label for="estado" class="form-label">Estado:</label>
+          <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input" id="state" formControlName="state">
+            <label class="form-check-label" for="state">{{ rapsCompetenciasForm.get('state')?.value ? 'Activo' : 'Inactivo' }}</label>
+          </div>
+        </div>
+  
+        <div class="modal-footer d-flex justify-content-center">
+          <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
+        </div>
+      </form>
+    </div>
+  
+    <!-- Sección de carga masiva al lado del formulario -->
+    <div class="carga-masiva-container">
+      <h3>Carga Masiva</h3>
+      <input type="file" (change)="onFileSelected($event)" class="form-control">
+      <button class="btn btn-success mt-3" (click)="uploadExcel()">Subir Excel</button>
+    </div>
+  </div>
+  
+  <!-- Tabla dinámica para mostrar las relaciones RAP-Competencia -->
+  <div class="table-container mt-5">
+    <h2 class="text-center mb-4">Lista de Relaciones RAP-Competencia</h2>
+    <div class="table-responsive">
+      <app-table [headers]="headers" [data]="rapsCompetencias" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-table>
+    </div>
+  </div>
+  

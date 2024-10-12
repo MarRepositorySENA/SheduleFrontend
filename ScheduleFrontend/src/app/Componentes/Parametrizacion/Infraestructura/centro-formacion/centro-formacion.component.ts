@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CentroFormacionService } from '../../../../Services/Parameter/Infraestructura/centro-formacion.service';
-import { RegionalService } from '../../../../Services/Parameter/Infraestructura/regional.service';
-import { CiudadService } from '../../../../Services/Parameter/Ubicacion/ciudad.service';
+import { RegionalService } from '../../../../Services/Parameter/Infraestructura/regional.service'; // Servicio de Regional
+import { CiudadService } from '../../../../Services/Parameter/Ubicacion/ciudad.service'; // Servicio de Ciudad
+import Swal from 'sweetalert2';
+
+import { Ciudad } from '../../../../models/M-Parameter/Ubicacion/ciudad'; // Modelo de Ciudad
 import { Regional } from '../../../../models/M-Parameter/infraestructura/regional';
-import { Ciudad } from '../../../../models/M-Parameter/Ubicacion/ciudad';
 import { CentroFormacion } from '../../../../models/M-Parameter/infraestructura/centro-formacion';
 
 @Component({
@@ -14,16 +16,17 @@ import { CentroFormacion } from '../../../../models/M-Parameter/infraestructura/
 })
 export class CentroFormacionComponent implements OnInit {
   centrosFormacion: CentroFormacion[] = [];
-  regionales: Regional[] = [];
-  ciudades: Ciudad[] = [];
+  regionales: Regional[] = []; // Relación foránea con Regional
+  ciudades: Ciudad[] = []; // Relación foránea con Ciudad
   centroFormacionForm!: FormGroup;
+  selectedFile!: File; // Para la carga masiva
   isEditing: boolean = false;
   headers = [
     { title: 'Nombre', field: 'nombre' },
     { title: 'Dirección', field: 'direccion' },
     { title: 'Teléfono', field: 'telefono' },
-    { title: 'Regional', field: 'regionalId.nombre' },
-    { title: 'Ciudad', field: 'ciudadId.nombre' },
+    { title: 'Regional', field: 'regionalId.nombre' }, // Mostrar el nombre de la regional
+    { title: 'Ciudad', field: 'ciudadId.nombre' }, // Mostrar el nombre de la ciudad
     { title: 'Estado', field: 'state' }
   ];
 
@@ -36,8 +39,8 @@ export class CentroFormacionComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCentrosFormacion();
-   
-    this.getCiudades();
+    this.getRegionales(); // Cargar los regionales
+    this.getCiudades(); // Cargar las ciudades
     this.initializeForm();
   }
 
@@ -47,13 +50,9 @@ export class CentroFormacionComponent implements OnInit {
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       direccion: ['', Validators.required],
       telefono: ['', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]],
-      regionalId: this.fb.group({
-        id: [null, Validators.required]
-      }),
-      ciudadId: this.fb.group({
-        id: [null, Validators.required]
-      }),
-      state: [true],
+      regionalId: [null, Validators.required], // Llave foránea con Regional
+      ciudadId: [null, Validators.required], // Llave foránea con Ciudad
+      state: [true, Validators.required],
       createdAt: [''],
       updatedAt: ['']
     });
@@ -70,10 +69,19 @@ export class CentroFormacionComponent implements OnInit {
     );
   }
 
- 
+  getRegionales(): void {
+    this.regionalService.getRegionalesSinEliminar().subscribe(
+      data => {
+        this.regionales = data;
+      },
+      error => {
+        console.error('Error al obtener los regionales:', error);
+      }
+    );
+  }
 
   getCiudades(): void {
-    this.ciudadService.getCiudades().subscribe(
+    this.ciudadService.getCiudadesSinEliminar().subscribe(
       data => {
         this.ciudades = data;
       },
@@ -85,11 +93,12 @@ export class CentroFormacionComponent implements OnInit {
 
   onSubmit(): void {
     if (this.centroFormacionForm.invalid) {
-      alert('Por favor, complete todos los campos correctamente.');
+      Swal.fire('Error', 'Por favor complete todos los campos obligatorios.', 'error');
       return;
     }
 
     const centroFormacion: CentroFormacion = this.centroFormacionForm.value;
+
     if (this.isEditing) {
       this.updateCentroFormacion(centroFormacion);
     } else {
@@ -103,17 +112,16 @@ export class CentroFormacionComponent implements OnInit {
 
     this.centroFormacionService.createCentroFormacion(centroFormacion).subscribe(
       response => {
-        alert('Centro de formación creado con éxito.');
+        Swal.fire('Éxito', 'Centro de formación creado con éxito.', 'success');
         this.getCentrosFormacion();
         this.resetForm();
       },
       error => {
         console.error('Error al crear el centro de formación:', error);
+        Swal.fire('Error', 'Error al crear el centro de formación.', 'error');
       }
     );
   }
-
-
 
   updateCentroFormacion(centroFormacion: CentroFormacion): void {
     const updatedCentroFormacion: CentroFormacion = {
@@ -123,13 +131,14 @@ export class CentroFormacionComponent implements OnInit {
 
     this.centroFormacionService.updateCentroFormacion(updatedCentroFormacion).subscribe(
       response => {
-        alert('Centro de formación actualizado con éxito.');
+        Swal.fire('Éxito', 'Centro de formación actualizado con éxito.', 'success');
         this.getCentrosFormacion();
         this.resetForm();
         this.isEditing = false;
       },
       error => {
         console.error('Error al actualizar el centro de formación:', error);
+        Swal.fire('Error', 'Error al actualizar el centro de formación.', 'error');
       }
     );
   }
@@ -140,10 +149,72 @@ export class CentroFormacionComponent implements OnInit {
       nombre: '',
       direccion: '',
       telefono: '',
-      regionalId: { id: null },
-      ciudadId: { id: null },
+      regionalId: null,
+      ciudadId: null,
       state: true
     });
     this.isEditing = false;
+  }
+
+  onEdit(item: CentroFormacion): void {
+    this.isEditing = true;
+    this.centroFormacionForm.patchValue({
+      id: item.id,
+      nombre: item.nombre,
+      direccion: item.direccion,
+      telefono: item.telefono,
+      regionalId: item.regionalId.id, // Relación con regional por ID
+      ciudadId: item.ciudadId.id, // Relación con ciudad por ID
+      state: item.state,
+      createdAt: item.createdAt || new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    });
+  }
+
+  onDelete(id: number): void {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'No podrás revertir esto',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminarlo'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.centroFormacionService.deleteCentroFormacion(id).subscribe(
+          response => {
+            Swal.fire('Eliminado!', 'El centro de formación ha sido eliminado.', 'success');
+            this.getCentrosFormacion();
+          },
+          error => {
+            console.error('Error al eliminar el centro de formación:', error);
+            Swal.fire('Error', 'Error al eliminar el centro de formación.', 'error');
+          }
+        );
+      }
+    });
+  }
+
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0];
+  }
+
+  uploadExcel(): void {
+    if (!this.selectedFile) {
+      Swal.fire('Error', 'Por favor seleccione un archivo Excel.', 'error');
+      return;
+    }
+
+    this.centroFormacionService.cargarMasivo(this.selectedFile).subscribe(
+      response => {
+        Swal.fire('Éxito', 'Carga masiva completada con éxito.', 'success');
+        this.getCentrosFormacion();
+      },
+      error => {
+        console.error('Error durante la carga masiva:', error);
+        Swal.fire('Error', error.error.message || 'Error durante la carga masiva.', 'error');
+      }
+    );
   }
 }

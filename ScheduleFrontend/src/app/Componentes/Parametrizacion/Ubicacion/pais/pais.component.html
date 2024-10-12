@@ -8,15 +8,18 @@
         <label for="nombre" class="form-label">Nombre:</label>
         <input type="text" id="nombre" class="form-control" formControlName="nombre">
       </div>
+
       <div class="mb-3">
         <label for="codigo" class="form-label">Código:</label>
         <input type="text" id="codigo" class="form-control" formControlName="codigo">
       </div>
+
       <div class="mb-3">
-        <label for="continente" class="form-label">Continente:</label>
-        <select id="continente" class="form-select" formControlName="continenteId">
-          <option *ngIf="continentes.length === 0" disabled>Cargando continentes...</option>
-          <option *ngFor="let continente of continentes" [value]="continente.id">{{ continente.nombre }}</option>
+        <label for="continenteId" class="form-label">Continente:</label>
+        <select id="continenteId" class="form-control" formControlName="continenteId">
+          <option *ngFor="let continente of continentes" [value]="continente.id">
+            {{ continente.nombre }}
+          </option>
         </select>
       </div>
 

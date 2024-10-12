@@ -8,7 +8,7 @@ import { Continente } from '../../../models/M-Parameter/Ubicacion/continente';
 })
 export class ContinenteService {
   private apiUrl = 'http://localhost:9000/base/api/v1/base/parameter/ubicacion/continente';
-  private apiCargaMasivaUrl = 'http://localhost:9000/base/api/carga_masiva/continentes'; 
+  private apiCargaMasivaUrl = 'http://localhost:9000/base/api/ubicacion/carga_masiva/continentes'; 
 
   constructor(private http: HttpClient) {}
 

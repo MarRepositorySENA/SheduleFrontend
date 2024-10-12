@@ -42,22 +42,23 @@ public abstract class BaseService<T extends BaseEntity> implements IBaseService<
 
 	@Override
 	public void update(Long id, T instanceEntity) throws Exception {
-		Optional<T> optionalP = this.repository.findById(id);
-		if (optionalP.isEmpty()) {
-			throw new Exception("No se encontró registro");
-		}
-		T objetoToUpdate = optionalP.get();
+	    Optional<T> optionalP = this.repository.findById(id);
+	    if (optionalP.isEmpty()) {
+	        throw new Exception("No se encontró registro");
+	    }
+	    T objetoToUpdate = optionalP.get();
 
-		// Aseguramos que el campo `createdAt` no sea sobrescrito
-		instanceEntity.setCreatedAt(objetoToUpdate.getCreatedAt());
+	    // Aseguramos que el campo `createdAt` no sea sobrescrito
+	    instanceEntity.setCreatedAt(objetoToUpdate.getCreatedAt());
 
-		// Copiamos las demás propiedades, excluyendo las que no deben cambiar
-		BeanUtils.copyProperties(instanceEntity, objetoToUpdate,
-				GlobalConstants.EXCLUDED_FIELDS.toArray(new String[0]));
+	    // Copiamos las demás propiedades, excluyendo las que no deben cambiar
+	    BeanUtils.copyProperties(instanceEntity, objetoToUpdate,
+	            GlobalConstants.EXCLUDED_FIELDS.toArray(new String[0]));
 
-		auditService.setAuditOnUpdate(objetoToUpdate); // Asegura que la auditoría se actualice
-		this.repository.save(objetoToUpdate);
+	    auditService.setAuditOnUpdate(objetoToUpdate);  // Aseguramos que la auditoría se actualice
+	    this.repository.save(objetoToUpdate);
 	}
+
 
 	@Override
 	public void delete(Long id) throws Exception {

@@ -13,7 +13,7 @@ import com.persona.Backend.IService.EXCEL.Parameter.Ubicacion.ICargaMasivaPaisSe
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api/carga_masiva")
+@RequestMapping("/api/ubicacion/carga_masiva")
 public class CargaMasivaUbicacionController {
 
 	    @Autowired

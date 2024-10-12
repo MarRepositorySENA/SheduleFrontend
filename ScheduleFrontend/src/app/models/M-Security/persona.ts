@@ -1,5 +1,9 @@
 export interface Persona {
   id: number;
+  state?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string | null;
   primerNombre: string;
   segundoNombre?: string;
   primerApellido: string;
@@ -11,8 +15,4 @@ export interface Persona {
   direccion: string;
   telefono: string;
   fechaNacimiento: string;
-  state: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string | null;
 }

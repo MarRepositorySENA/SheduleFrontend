@@ -1,10 +1,10 @@
 export interface Modulo {
   id: number;
-  nombre: string;
-  ruta: string;
-  icono: string;
-  state: boolean;
+  state?: boolean;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string | null;
+  nombre: string;
+  ruta: string;
+  icono: string;
 }

@@ -1,39 +1,18 @@
 export interface CentroFormacion {
   id: number;
-  state: boolean;
+  state?: boolean;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string | null;
-  nit: string;
   nombre: string;
-  acronimo: string;
   direccion: string;
   telefono: string;
-  departamentoId: {
+  regionalId: {                          // Relación con Regional
     id: number;
-    state: boolean;
-    createdAt?: string;
-    updatedAt?: string;
-    deletedAt?: string | null;
-    nombre: string;
-    codigo: string;
-    paisId: {
-      id: number;
-      state: boolean;
-      createdAt?: string;
-      updatedAt?: string;
-      deletedAt?: string | null;
-      nombre: string;
-      codigo: string;
-      continenteId: {
-        id: number;
-        state: boolean;
-        createdAt?: string;
-        updatedAt?: string;
-        deletedAt?: string | null;
-        nombre: string;
-        codigo: string;
-      };
-    };
+    nombre?: string;
+  };
+  ciudadId: {                            // Relación con Ciudad
+    id: number;
+    nombre?: string;
   };
 }

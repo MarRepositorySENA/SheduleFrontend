@@ -18,19 +18,24 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  // Método para iniciar sesión
-  login(username: string, password: string) {
-    localStorage.removeItem('token');
-    return this.http.post<AuthResponse>(`${this.apiUrl}`, { username, password }, {
-      headers: { 'Content-Type': 'application/json' }
-    }).subscribe(response => {
-      this.tokenSubject.next(response.jwt); // Actualiza el token
-      localStorage.setItem('token', response.jwt); // Guarda el token en localStorage
-      this.router.navigate(['/dashboard']); // Redirige al home después de iniciar sesión
-    }, error => {
-      console.error('Error en el inicio de sesión', error);
-    });
-  }
+  // auth.service.ts
+
+login(username: string, password: string) {
+  localStorage.removeItem('token');
+  localStorage.removeItem('username');  // Remover nombre de usuario si ya existe
+
+  return this.http.post<AuthResponse>(`${this.apiUrl}`, { username, password }, {
+    headers: { 'Content-Type': 'application/json' }
+  }).subscribe(response => {
+    this.tokenSubject.next(response.jwt); // Actualiza el token
+    localStorage.setItem('token', response.jwt); // Guarda el token en localStorage
+    localStorage.setItem('username', username); // Guarda el nombre de usuario en localStorage
+    this.router.navigate(['/dashboard']); // Redirige al home después de iniciar sesión
+  }, error => {
+    console.error('Error en el inicio de sesión', error);
+  });
+}
+
   
 
   // Método para cerrar sesión

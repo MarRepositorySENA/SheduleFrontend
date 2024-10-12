@@ -7,8 +7,9 @@ import { CiudadComponent } from '../../../Componentes/Parametrizacion/Ubicacion/
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TableComponent } from '../../../Componentes/Pages/table/table.component';
 import { ContinenteComponent } from '../../../Componentes/Parametrizacion/Ubicacion/continente/continente.component';
-import { DepartamentoComponent } from '../../../Componentes/Parametrizacion/Ubicacion/departamento/departamento.component';
 import { LocalidadComponent } from '../../../Componentes/Parametrizacion/Ubicacion/localidad/localidad.component';
+import { DepartamentoComponent } from '../../../Componentes/Parametrizacion/Ubicacion/departamento/departamento.component';
+
 
 @NgModule({
   declarations: [

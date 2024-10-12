@@ -1,0 +1,73 @@
+<div class="form-carga-container">
+    <!-- Formulario para Crear/Editar Empleado -->
+    <div class="form-container">
+      <h2 class="text-center mb-4">{{ isEditing ? 'Editar Empleado' : 'Registrar Empleado' }}</h2>
+  
+      <form [formGroup]="empleadoForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="identificador" class="form-label">Identificador:</label>
+          <input type="text" id="identificador" class="form-control" formControlName="identificador">
+        </div>
+  
+        <div class="mb-3">
+          <label for="fechaInicio" class="form-label">Fecha de Inicio:</label>
+          <input type="date" id="fechaInicio" class="form-control" formControlName="fechaInicio">
+        </div>
+  
+        <div class="mb-3">
+          <label for="fechaFin" class="form-label">Fecha de Fin:</label>
+          <input type="date" id="fechaFin" class="form-control" formControlName="fechaFin">
+        </div>
+  
+        <div class="mb-3">
+          <label for="cargoId" class="form-label">Cargo:</label>
+          <select id="cargoId" class="form-control" formControlName="cargoId.id">
+            <option *ngFor="let cargo of cargos" [value]="cargo.id">{{ cargo.nombre }}</option>
+          </select>
+        </div>
+  
+        <div class="mb-3">
+          <label for="tipoContratoId" class="form-label">Tipo de Contrato:</label>
+          <select id="tipoContratoId" class="form-control" formControlName="tipoContratoId.id">
+            <option *ngFor="let tipo of tiposContrato" [value]="tipo.id">{{ tipo.nombre }}</option>
+          </select>
+        </div>
+  
+        <div class="mb-3">
+          <label for="personaId" class="form-label">Persona:</label>
+          <select id="personaId" class="form-control" formControlName="personaId.id">
+            <option *ngFor="let persona of personas" [value]="persona.id">{{ persona.primerNombre }}</option>
+          </select>
+        </div>
+  
+        <!-- Mostrar estado solo si estamos editando -->
+        <div *ngIf="isEditing" class="mb-3">
+          <label for="estado" class="form-label">Estado:</label>
+          <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input" id="state" formControlName="state">
+            <label class="form-check-label" for="state">{{ empleadoForm.get('state')?.value ? 'Activo' : 'Inactivo' }}</label>
+          </div>
+        </div>
+  
+        <div class="modal-footer d-flex justify-content-center">
+          <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
+        </div>
+      </form>
+    </div>
+  
+    <!-- Sección de carga masiva al lado del formulario -->
+    <div class="carga-masiva-container">
+      <h3>Carga Masiva</h3>
+      <input type="file" (change)="onFileSelected($event)" class="form-control">
+      <button class="btn btn-success mt-3" (click)="uploadExcel()">Subir Excel</button>
+    </div>
+  </div>
+  
+  <!-- Tabla dinámica para mostrar los empleados -->
+  <div class="table-container mt-5">
+    <h2 class="text-center mb-4">Lista de Empleados</h2>
+    <div class="table-responsive">
+      <app-table [headers]="headers" [data]="empleados" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-table>
+    </div>
+  </div>
+  

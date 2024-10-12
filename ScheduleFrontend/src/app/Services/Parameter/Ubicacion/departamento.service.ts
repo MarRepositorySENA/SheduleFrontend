@@ -8,7 +8,7 @@ import { Departamento } from '../../../models/M-Parameter/Ubicacion/departamento
 })
 export class DepartamentoService {
   private apiUrl = 'http://localhost:9000/base/api/v1/base/parameter/ubicacion/departamento';
-  private apiCargaMasivaUrl = 'http://localhost:9000/base/api/carga_masiva/departamentos'; // Endpoint de carga masiva
+  private apiCargaMasivaUrl = 'http://localhost:9000/base/api/ubicacion/carga_masiva/departamentos'; // Endpoint de carga masiva
 
   constructor(private http: HttpClient) {}
 

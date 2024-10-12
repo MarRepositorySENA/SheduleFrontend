@@ -8,14 +8,18 @@
         <label for="nombre" class="form-label">Nombre:</label>
         <input type="text" id="nombre" class="form-control" formControlName="nombre">
       </div>
+
       <div class="mb-3">
         <label for="codigo" class="form-label">Código:</label>
         <input type="text" id="codigo" class="form-control" formControlName="codigo">
       </div>
+
       <div class="mb-3">
-        <label for="pais" class="form-label">País:</label>
-        <select id="pais" class="form-select" formControlName="paisId">
-          <option *ngFor="let pais of paises" [value]="pais.id">{{ pais.nombre }}</option>
+        <label for="paisId" class="form-label">País:</label>
+        <select id="paisId" class="form-control" formControlName="paisId">
+          <option *ngFor="let pais of paises" [value]="pais.id">
+            {{ pais.nombre }}
+          </option>
         </select>
       </div>
 

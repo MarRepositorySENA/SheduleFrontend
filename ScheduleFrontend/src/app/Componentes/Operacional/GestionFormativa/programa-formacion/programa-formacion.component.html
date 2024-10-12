@@ -1,0 +1,79 @@
+<div class="form-carga-container">
+    <!-- Formulario para Crear/Editar Programa de Formación -->
+    <div class="form-container">
+      <h2 class="text-center mb-4">{{ isEditing ? 'Editar Programa de Formación' : 'Registrar Programa de Formación' }}</h2>
+  
+      <form [formGroup]="programaFormacionForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="nombre" class="form-label">Nombre:</label>
+          <input type="text" id="nombre" class="form-control" formControlName="nombre">
+        </div>
+  
+        <div class="mb-3">
+          <label for="descripcion" class="form-label">Descripción:</label>
+          <textarea id="descripcion" class="form-control" formControlName="descripcion"></textarea>
+        </div>
+  
+        <div class="mb-3">
+          <label for="duraccion" class="form-label">Duración (horas):</label>
+          <input type="number" id="duraccion" class="form-control" formControlName="duraccion">
+        </div>
+  
+        <div class="mb-3">
+          <label for="modalidadId" class="form-label">Modalidad:</label>
+          <select id="modalidadId" class="form-control" formControlName="modalidadId">
+            <option *ngFor="let modalidad of modalidades" [value]="modalidad.id">
+              {{ modalidad.nombre }}
+            </option>
+          </select>
+        </div>
+  
+        <div class="mb-3">
+          <label for="nivelFormacionId" class="form-label">Nivel de Formación:</label>
+          <select id="nivelFormacionId" class="form-control" formControlName="nivelFormacionId">
+            <option *ngFor="let nivel of nivelesFormacion" [value]="nivel.id">
+              {{ nivel.nombre }}
+            </option>
+          </select>
+        </div>
+  
+        <div class="mb-3">
+          <label for="tipoFormacionId" class="form-label">Tipo de Formación:</label>
+          <select id="tipoFormacionId" class="form-control" formControlName="tipoFormacionId">
+            <option *ngFor="let tipo of tiposFormacion" [value]="tipo.id">
+              {{ tipo.nombre }}
+            </option>
+          </select>
+        </div>
+  
+        <!-- Mostrar estado solo si estamos editando -->
+        <div *ngIf="isEditing" class="mb-3">
+          <label for="estado" class="form-label">Estado:</label>
+          <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input" id="state" formControlName="state">
+            <label class="form-check-label" for="state">{{ programaFormacionForm.get('state')?.value ? 'Activo' : 'Inactivo' }}</label>
+          </div>
+        </div>
+  
+        <div class="modal-footer d-flex justify-content-center">
+          <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
+        </div>
+      </form>
+    </div>
+  
+    <!-- Sección de carga masiva al lado del formulario -->
+    <div class="carga-masiva-container">
+      <h3>Carga Masiva</h3>
+      <input type="file" (change)="onFileSelected($event)" class="form-control">
+      <button class="btn btn-success mt-3" (click)="uploadExcel()">Subir Excel</button>
+    </div>
+  </div>
+  
+  <!-- Tabla dinámica para mostrar los programas de formación -->
+  <div class="table-container mt-5">
+    <h2 class="text-center mb-4">Lista de Programas de Formación</h2>
+    <div class="table-responsive">
+      <app-table [headers]="headers" [data]="programasFormacion" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-table>
+    </div>
+  </div>
+  

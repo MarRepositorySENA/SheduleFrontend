@@ -1,0 +1,51 @@
+<div class="form-carga-container">
+    <!-- Formulario para Crear/Editar Fichas-Empleado -->
+    <div class="form-container">
+      <h2 class="text-center mb-4">{{ isEditing ? 'Editar Ficha-Empleado' : 'Registrar Ficha-Empleado' }}</h2>
+  
+      <form [formGroup]="fichasEmpleadosForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="empleadoId" class="form-label">Empleado:</label>
+          <select id="empleadoId" class="form-control" formControlName="empleadoId.id">
+            <option *ngFor="let empleado of empleados" [value]="empleado.id">{{ empleado.identificador }}</option>
+          </select>
+        </div>
+  
+        <div class="mb-3">
+          <label for="fichaId" class="form-label">Ficha:</label>
+          <select id="fichaId" class="form-control" formControlName="fichaId.id">
+            <option *ngFor="let ficha of fichas" [value]="ficha.id">{{ ficha.codigo }}</option>
+          </select>
+        </div>
+  
+        <!-- Mostrar estado solo si estamos editando -->
+        <div *ngIf="isEditing" class="mb-3">
+          <label for="estado" class="form-label">Estado:</label>
+          <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input" id="state" formControlName="state">
+            <label class="form-check-label" for="state">{{ fichasEmpleadosForm.get('state')?.value ? 'Activo' : 'Inactivo' }}</label>
+          </div>
+        </div>
+  
+        <div class="modal-footer d-flex justify-content-center">
+          <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
+        </div>
+      </form>
+    </div>
+  
+    <!-- Sección de carga masiva al lado del formulario -->
+    <div class="carga-masiva-container">
+      <h3>Carga Masiva</h3>
+      <input type="file" (change)="onFileSelected($event)" class="form-control">
+      <button class="btn btn-success mt-3" (click)="uploadExcel()">Subir Excel</button>
+    </div>
+  </div>
+  
+  <!-- Tabla dinámica para mostrar las fichas-empleados -->
+  <div class="table-container mt-5">
+    <h2 class="text-center mb-4">Lista de Fichas-Empleados</h2>
+    <div class="table-responsive">
+      <app-table [headers]="headers" [data]="fichasEmpleados" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-table>
+    </div>
+  </div>
+  

@@ -1,36 +1,97 @@
-<!-- <div class="container mt-5">
+<div class="form-carga-container">
+  <!-- Formulario para Crear/Editar Persona y Usuario -->
+  <div class="form-container">
     <h2 class="text-center mb-4">{{ isEditing ? 'Editar Persona y Usuario' : 'Registrar Persona y Usuario' }}</h2>
-  
-    Formulario para Crear/Editar Persona y Usuario 
+
     <form [formGroup]="personaUsuarioForm" (ngSubmit)="onSubmit()">
-      <div formGroupName="personaId">
-        <div class="mb-3">
-          <label for="primerNombre" class="form-label">Primer Nombre:</label>
-          <input type="text" id="primerNombre" class="form-control" formControlName="primerNombre" required>
-        </div>
-        Similar input fields for other Persona properties 
+      <!-- Sección de Persona -->
+      <div class="mb-3">
+        <label for="primerNombre" class="form-label">Primer Nombre:</label>
+        <input type="text" id="primerNombre" class="form-control" formControlName="primerNombre">
       </div>
       <div class="mb-3">
-        <label for="usuarioName" class="form-label">Usuario:</label>
-        <input type="text" id="usuarioName" class="form-control" formControlName="usuarioName" required>
+        <label for="segundoNombre" class="form-label">Segundo Nombre:</label>
+        <input type="text" id="segundoNombre" class="form-control" formControlName="segundoNombre">
+      </div>
+      <div class="mb-3">
+        <label for="primerApellido" class="form-label">Primer Apellido:</label>
+        <input type="text" id="primerApellido" class="form-control" formControlName="primerApellido">
+      </div>
+      <div class="mb-3">
+        <label for="segundoApellido" class="form-label">Segundo Apellido:</label>
+        <input type="text" id="segundoApellido" class="form-control" formControlName="segundoApellido">
+      </div>
+      <div class="mb-3">
+        <label for="tipoDocumento" class="form-label">Tipo de Documento:</label>
+        <input type="text" id="tipoDocumento" class="form-control" formControlName="tipoDocumento">
+      </div>
+      <div class="mb-3">
+        <label for="numeroDocumento" class="form-label">Número de Documento:</label>
+        <input type="text" id="numeroDocumento" class="form-control" formControlName="numeroDocumento">
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Correo Electrónico:</label>
+        <input type="email" id="email" class="form-control" formControlName="email">
+      </div>
+      <div class="mb-3">
+        <label for="genero" class="form-label">Género:</label>
+        <select id="genero" class="form-select" formControlName="genero">
+          <option value="" disabled selected>Seleccione el género</option>
+          <option value="M">Masculino</option>
+          <option value="F">Femenino</option>
+          <option value="O">Otro</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="direccion" class="form-label">Dirección:</label>
+        <input type="text" id="direccion" class="form-control" formControlName="direccion">
+      </div>
+      <div class="mb-3">
+        <label for="telefono" class="form-label">Teléfono:</label>
+        <input type="text" id="telefono" class="form-control" formControlName="telefono">
+      </div>
+      <div class="mb-3">
+        <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento:</label>
+        <input type="date" id="fechaNacimiento" class="form-control" formControlName="fechaNacimiento">
+      </div>
+
+      <!-- Sección de Usuario -->
+      <div class="mb-3">
+        <label for="usuarioName" class="form-label">Nombre de Usuario:</label>
+        <input type="text" id="usuarioName" class="form-control" formControlName="usuarioName">
       </div>
       <div class="mb-3">
         <label for="contrasenia" class="form-label">Contraseña:</label>
-        <input type="password" id="contrasenia" class="form-control" formControlName="contrasenia" required>
+        <input type="password" id="contrasenia" class="form-control" formControlName="contrasenia">
       </div>
-  
+
+      <!-- Mostrar estado solo si estamos editando -->
+      <div *ngIf="isEditing" class="mb-3">
+        <label for="estado" class="form-label">Estado:</label>
+        <div class="form-check form-switch">
+          <input type="checkbox" class="form-check-input" id="state" formControlName="state">
+          <label class="form-check-label" for="state">{{ personaUsuarioForm.get('persona.state')?.value ? 'Activo' : 'Inactivo' }}</label>
+        </div>
+      </div>
+
       <div class="modal-footer d-flex justify-content-center">
         <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
       </div>
     </form>
   </div>
-  
- Tabla de Personas y Usuarios 
-  <div class="table-container mt-5">
-    <h2 class="text-center mb-4">Lista de Personas y Usuarios</h2>
-    <div class="table-responsive">
-      <app-table [headers]="headers" [data]="personasUsuarios" (edit)="editPersonaUsuario($event)" (delete)="deletePersonaUsuario($event)">
-      </app-table>
-    </div>
+
+  <!-- Sección de carga masiva al lado del formulario -->
+  <div class="carga-masiva-container">
+    <h3>Carga Masiva de Personas y Usuarios</h3>
+    <input type="file" (change)="onFileSelected($event)" class="form-control">
+    <button class="btn btn-success mt-3" (click)="uploadExcel()">Subir Excel</button>
   </div>
-   -->
+</div>
+
+<!-- Tabla dinámica para mostrar las personas y usuarios -->
+<div class="table-container mt-5">
+  <h2 class="text-center mb-4">Lista de Personas y Usuarios</h2>
+  <div class="table-responsive">
+    <app-table [headers]="headers" [data]="personas" (edit)="onEdit($event, $event.persona.usuario)" (delete)="onDelete($event)"></app-table>
+  </div>
+</div>

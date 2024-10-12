@@ -1,1 +1,55 @@
-<p>usuarios-roles works!</p>
+<div class="form-carga-container">
+    <!-- Formulario para Crear/Editar Usuario-Rol -->
+    <div class="form-container">
+      <h2 class="text-center mb-4">{{ isEditing ? 'Editar Usuario-Rol' : 'Registrar Usuario-Rol' }}</h2>
+  
+      <form [formGroup]="usuariosRolesForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="usuarioId" class="form-label">Usuario:</label>
+          <select id="usuarioId" class="form-control" formControlName="usuarioId">
+            <option *ngFor="let usuario of usuarios" [value]="usuario.id">
+              {{ usuario.usuarioName }}
+            </option>
+          </select>
+        </div>
+  
+        <div class="mb-3">
+          <label for="roleId" class="form-label">Rol:</label>
+          <select id="roleId" class="form-control" formControlName="roleId">
+            <option *ngFor="let role of roles" [value]="role.id">
+              {{ role.nombre }}
+            </option>
+          </select>
+        </div>
+  
+        <!-- Mostrar estado solo si estamos editando -->
+        <div *ngIf="isEditing" class="mb-3">
+          <label for="estado" class="form-label">Estado:</label>
+          <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input" id="state" formControlName="state">
+            <label class="form-check-label" for="state">{{ usuariosRolesForm.get('state')?.value ? 'Activo' : 'Inactivo' }}</label>
+          </div>
+        </div>
+  
+        <div class="modal-footer d-flex justify-content-center">
+          <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
+        </div>
+      </form>
+    </div>
+  
+    <!-- Sección de carga masiva al lado del formulario -->
+    <div class="carga-masiva-container">
+      <h3>Carga Masiva</h3>
+      <input type="file" (change)="onFileSelected($event)" class="form-control">
+      <button class="btn btn-success mt-3" (click)="uploadExcel()">Subir Excel</button>
+    </div>
+  </div>
+  
+  <!-- Tabla dinámica para mostrar los usuarios-roles -->
+  <div class="table-container mt-5">
+    <h2 class="text-center mb-4">Lista de Usuarios-Roles</h2>
+    <div class="table-responsive">
+      <app-table [headers]="headers" [data]="usuariosRoles" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-table>
+    </div>
+  </div>
+  

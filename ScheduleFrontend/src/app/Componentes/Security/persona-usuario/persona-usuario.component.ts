@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PersonaUsuarioService } from '../../../Services/Security/persona-usuario.service';
+import Swal from 'sweetalert2';
 import { Persona } from '../../../models/M-Security/persona';
 import { Usuario } from '../../../models/M-Security/usuario';
-import { ReactiveFormsModule } from '@angular/forms';
+import { PersonaUsuarioService } from '../../../Services/S-Security/persona-usuario.service';
 
 @Component({
   selector: 'app-persona-usuario',
@@ -12,7 +12,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 })
 export class PersonaUsuarioComponent implements OnInit {
   personaUsuarioForm!: FormGroup;
+  personas: Persona[] = [];
+  selectedFile!: File; // Para la carga masiva
   isEditing: boolean = false;
+  headers = [
+    { title: 'Primer Nombre', field: 'primerNombre' },
+    { title: 'Primer Apellido', field: 'primerApellido' },
+    { title: 'Nombre de Usuario', field: 'usuarioName' },
+    { title: 'Estado', field: 'state' }
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -20,109 +28,194 @@ export class PersonaUsuarioComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.getPersonas();
     this.initializeForm();
   }
 
-  // Inicializa el formulario reactivo
   initializeForm(): void {
     this.personaUsuarioForm = this.fb.group({
-      id: [0],
-      primerNombre: ['', Validators.required],
-      segundoNombre: [''],
-      primerApellido: ['', Validators.required],
-      segundoApellido: [''],
-      tipoDocumento: ['', Validators.required],
-      numeroDocumento: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      genero: ['', Validators.required],
-      direccion: [''],
-      telefono: [''],
-      fechaNacimiento: ['', Validators.required],
-      usuarioName: ['', Validators.required],
-      contrasenia: ['', Validators.required],
-      state: [true],
-      createdAt: [''],
-      updatedAt: ['']
+      persona: this.fb.group({
+        id: [0],
+        primerNombre: ['', Validators.required],
+        segundoNombre: [''],
+        primerApellido: ['', Validators.required],
+        segundoApellido: [''],
+        tipoDocumento: ['', Validators.required],
+        numeroDocumento: ['', Validators.required],
+        email: ['', [Validators.required, Validators.email]],
+        genero: ['', Validators.required],
+        direccion: ['', Validators.required],
+        telefono: ['', Validators.required],
+        fechaNacimiento: ['', Validators.required],
+        state: [true]
+      }),
+      usuario: this.fb.group({
+        usuarioName: ['', Validators.required],
+        contrasenia: ['', Validators.required],
+        personaId: [null, Validators.required],  // Aseguramos que personaId esté correctamente referenciado
+        state: [true]
+      })
     });
   }
 
-  // Envía el formulario para crear o actualizar persona y usuario
-  onSubmit(): void {
-    if (this.personaUsuarioForm.valid) {
-      const persona: Persona = {
-        ...this.personaUsuarioForm.value,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
-
-      if (this.isEditing) {
-        this.updatePersonaUsuario(persona);
-      } else {
-        this.createPersonaUsuario(persona);
-      }
-    }
-  }
-
-  // Crea una nueva persona y usuario
-  createPersonaUsuario(persona: Persona): void {
-    this.personaUsuarioService.createPersonaUsuario(
-      persona,
-      this.personaUsuarioForm.value.usuarioName,
-      this.personaUsuarioForm.value.contrasenia
-    ).subscribe(
-      () => {
-        console.log('Persona y Usuario creados con éxito');
-        this.resetForm();
+  // Obtener todas las personas
+  getPersonas(): void {
+    this.personaUsuarioService.getPersonas().subscribe(
+      data => {
+        this.personas = data;
       },
-      (error) => {
-        console.error('Error al crear Persona y Usuario:', error);
+      error => {
+        console.error('Error al obtener las personas:', error);
       }
     );
   }
 
-  // Actualiza una persona y usuario existentes
-  updatePersonaUsuario(persona: Persona): void {
-    const usuario: Usuario = {
-      id: persona.id,
-      usuarioName: this.personaUsuarioForm.value.usuarioName,
-      contrasenia: this.personaUsuarioForm.value.contrasenia,
-      personaId: persona,
-      state: this.personaUsuarioForm.value.state,
-      createdAt: persona.createdAt,
-      updatedAt: new Date().toISOString()
-    };
+  // Crear Persona y Usuario
+  onSubmit(): void {
+    if (this.personaUsuarioForm.invalid) {
+      Swal.fire('Error', 'Por favor complete todos los campos obligatorios.', 'error');
+      return;
+    }
+
+    const persona: Persona = this.personaUsuarioForm.get('persona')?.value;
+    const usuario: Usuario = this.personaUsuarioForm.get('usuario')?.value;
+
+    this.personaUsuarioService.createPersonaUsuario(persona, usuario).subscribe(
+      () => {
+        Swal.fire('Éxito', 'Persona y Usuario creados con éxito.', 'success');
+        this.getPersonas(); // Refrescar la lista de personas
+        this.resetForm();
+      },
+      error => {
+        console.error('Error al crear persona y usuario:', error);
+        Swal.fire('Error', 'Error al crear persona y usuario.', 'error');
+      }
+    );
+  }
+
+  // Editar Persona y Usuario
+  onEdit(persona: Persona, usuario: Usuario): void {
+    this.isEditing = true;
+
+    // Llenar el formulario con los datos de persona y usuario
+    this.personaUsuarioForm.patchValue({
+      persona: {
+        id: persona.id,
+        primerNombre: persona.primerNombre,
+        segundoNombre: persona.segundoNombre,
+        primerApellido: persona.primerApellido,
+        segundoApellido: persona.segundoApellido,
+        tipoDocumento: persona.tipoDocumento,
+        numeroDocumento: persona.numeroDocumento,
+        email: persona.email,
+        genero: persona.genero,
+        direccion: persona.direccion,
+        telefono: persona.telefono,
+        fechaNacimiento: persona.fechaNacimiento,
+        state: persona.state
+      },
+      usuario: {
+        usuarioName: usuario.usuarioName,
+        contrasenia: '', // No podemos mostrar la contraseña actual, por seguridad
+        personaId: usuario.personaId.id, // Relación con personaId de Usuario
+        state: usuario.state
+      }
+    });
+  }
+
+  // Actualizar Persona y Usuario
+  updatePersonaUsuario(): void {
+    const persona: Persona = this.personaUsuarioForm.get('persona')?.value;
+    const usuario: Usuario = this.personaUsuarioForm.get('usuario')?.value;
 
     this.personaUsuarioService.updatePersonaUsuario(persona, usuario).subscribe(
       () => {
-        console.log('Persona y Usuario actualizados con éxito');
+        Swal.fire('Éxito', 'Persona y Usuario actualizados con éxito.', 'success');
+        this.getPersonas(); // Refrescar la lista
         this.resetForm();
         this.isEditing = false;
       },
-      (error) => {
-        console.error('Error al actualizar Persona y Usuario:', error);
+      error => {
+        console.error('Error al actualizar persona y usuario:', error);
+        Swal.fire('Error', 'Error al actualizar persona y usuario.', 'error');
       }
     );
   }
 
-  // Resetea el formulario
+  // Eliminar Persona y Usuario
+  onDelete(id: number): void {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'No podrás revertir esto',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminarlo'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.personaUsuarioService.deletePersonaUsuario(id).subscribe(
+          () => {
+            Swal.fire('Eliminado!', 'Persona y Usuario eliminados con éxito.', 'success');
+            this.getPersonas(); // Refrescar la lista de personas
+          },
+          error => {
+            console.error('Error al eliminar persona y usuario:', error);
+            Swal.fire('Error', 'Error al eliminar persona y usuario.', 'error');
+          }
+        );
+      }
+    });
+  }
+
+  // Reiniciar formulario
   resetForm(): void {
     this.personaUsuarioForm.reset({
-      id: 0,
-      primerNombre: '',
-      segundoNombre: '',
-      primerApellido: '',
-      segundoApellido: '',
-      tipoDocumento: '',
-      numeroDocumento: '',
-      email: '',
-      genero: '',
-      direccion: '',
-      telefono: '',
-      fechaNacimiento: '',
-      usuarioName: '',
-      contrasenia: '',
-      state: true
+      persona: {
+        id: 0,
+        primerNombre: '',
+        segundoNombre: '',
+        primerApellido: '',
+        segundoApellido: '',
+        tipoDocumento: '',
+        numeroDocumento: '',
+        email: '',
+        genero: '',
+        direccion: '',
+        telefono: '',
+        fechaNacimiento: '',
+        state: true
+      },
+      usuario: {
+        usuarioName: '',
+        contrasenia: '',
+        personaId: null,
+        state: true
+      }
     });
     this.isEditing = false;
+  }
+
+  // Carga masiva desde archivo Excel
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0];
+  }
+
+  uploadExcel(): void {
+    if (!this.selectedFile) {
+      Swal.fire('Error', 'Por favor seleccione un archivo Excel.', 'error');
+      return;
+    }
+
+    this.personaUsuarioService.cargarMasivo(this.selectedFile).subscribe(
+      () => {
+        Swal.fire('Éxito', 'Carga masiva completada con éxito.', 'success');
+        this.getPersonas();
+      },
+      error => {
+        console.error('Error durante la carga masiva:', error);
+        Swal.fire('Error', 'Error durante la carga masiva.', 'error');
+      }
+    );
   }
 }

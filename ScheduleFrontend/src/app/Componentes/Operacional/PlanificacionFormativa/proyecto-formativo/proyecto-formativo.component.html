@@ -1,0 +1,62 @@
+<div class="form-carga-container">
+    <!-- Formulario para Crear/Editar Proyecto Formativo -->
+    <div class="form-container">
+      <h2 class="text-center mb-4">{{ isEditing ? 'Editar Proyecto Formativo' : 'Registrar Proyecto Formativo' }}</h2>
+  
+      <form [formGroup]="proyectoFormativoForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="codigo" class="form-label">Código:</label>
+          <input type="text" id="codigo" class="form-control" formControlName="codigo">
+        </div>
+  
+        <div class="mb-3">
+          <label for="titulo" class="form-label">Título:</label>
+          <input type="text" id="titulo" class="form-control" formControlName="titulo">
+        </div>
+  
+        <div class="mb-3">
+          <label for="descripcion" class="form-label">Descripción:</label>
+          <textarea id="descripcion" class="form-control" formControlName="descripcion"></textarea>
+        </div>
+  
+        <div class="mb-3">
+          <label for="cantidadRap" class="form-label">Cantidad de RAP:</label>
+          <input type="number" id="cantidadRap" class="form-control" formControlName="cantidadRap">
+        </div>
+  
+        <div class="mb-3">
+          <label for="centroFormacion" class="form-label">Centro de Formación:</label>
+          <select id="centroFormacion" class="form-select" formControlName="centroFormacionId.id">
+            <option *ngFor="let centro of centrosFormacion" [value]="centro.id">{{ centro.nombre }}</option>
+          </select>
+        </div>
+  
+        <div class="mb-3">
+          <label for="ciudad" class="form-label">Ciudad:</label>
+          <select id="ciudad" class="form-select" formControlName="ciudadId.id">
+            <option *ngFor="let ciudad of ciudades" [value]="ciudad.id">{{ ciudad.nombre }}</option>
+          </select>
+        </div>
+  
+        <div class="modal-footer d-flex justify-content-center">
+          <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
+        </div>
+      </form>
+    </div>
+  
+    <!-- Carga masiva de Proyectos Formativos -->
+    <div class="carga-masiva-container">
+      <h3>Carga Masiva</h3>
+      <input type="file" (change)="onFileSelected($event)" class="form-control">
+      <button class="btn btn-success mt-3" (click)="uploadExcel()">Subir Excel</button>
+    </div>
+  </div>
+  
+  <!-- Tabla dinámica para mostrar los Proyectos Formativos -->
+  <div class="table-container mt-5">
+    <h2 class="text-center mb-4">Lista de Proyectos Formativos</h2>
+    <div class="table-responsive">
+      <app-table [headers]="headers" [data]="proyectosFormativos" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-table>
+    </div>
+  </div>
+  

@@ -1,14 +1,13 @@
 export interface Localidad {
+  id: number;
+  state?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string | null;
+  nombre: string;
+  codigoPostal: number;
+  ciudadId: {                            // Relación con Ciudad
     id: number;
-    nombre: string;
-    codigoPostal: number;
-    state: boolean;
-    createdAt?: string;
-    updatedAt?: string;
-    deletedAt?: string | null;
-    
-    ciudadId: {
-      id: number,
-      nombre?: string
-    };
-  }
+    nombre?: string;
+  };
+}

@@ -9,7 +9,9 @@ const routes: Routes = [
   {
     path: 'infraestructura',
     loadChildren: () => import('./infraestructura/infraestructura.module').then(m => m.InfraestructuraModule)
-  }
+  }, 
+  
+  
 ];
 
 @NgModule({

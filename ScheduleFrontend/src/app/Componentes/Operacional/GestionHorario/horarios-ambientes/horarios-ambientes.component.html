@@ -1,0 +1,65 @@
+<div class="form-carga-container">
+    <!-- Formulario para Crear/Editar Horarios de Ambientes -->
+    <div class="form-container">
+      <h2 class="text-center mb-4">{{ isEditing ? 'Editar Horario de Ambiente' : 'Registrar Horario de Ambiente' }}</h2>
+  
+      <form [formGroup]="horariosAmbientesForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="horaInicio" class="form-label">Hora Inicio:</label>
+          <input type="time" id="horaInicio" class="form-control" formControlName="horaInicio">
+        </div>
+  
+        <div class="mb-3">
+          <label for="horaFin" class="form-label">Hora Fin:</label>
+          <input type="time" id="horaFin" class="form-control" formControlName="horaFin">
+        </div>
+  
+        <div class="mb-3">
+          <label for="ambienteId" class="form-label">Ambiente:</label>
+          <select id="ambienteId" class="form-control" formControlName="ambienteId.id">
+            <option *ngFor="let ambiente of ambientes" [value]="ambiente.id">
+              {{ ambiente.nombre }} ({{ ambiente.codigo }})
+            </option>
+          </select>
+        </div>
+  
+        <div class="mb-3">
+          <label for="programacionFichaId" class="form-label">Programación Ficha:</label>
+          <select id="programacionFichaId" class="form-control" formControlName="programacionFichaId.id">
+            <option *ngFor="let programacion of programacionesFicha" [value]="programacion.id">
+              {{ programacion.codigo }} ({{ programacion.trimestre }})
+            </option>
+          </select>
+        </div>
+  
+        <!-- Mostrar estado solo si estamos editando -->
+        <div *ngIf="isEditing" class="mb-3">
+          <label for="estado" class="form-label">Estado:</label>
+          <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input" id="state" formControlName="state">
+            <label class="form-check-label" for="state">{{ horariosAmbientesForm.get('state')?.value ? 'Activo' : 'Inactivo' }}</label>
+          </div>
+        </div>
+  
+        <div class="modal-footer d-flex justify-content-center">
+          <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
+        </div>
+      </form>
+    </div>
+  
+    <!-- Sección de carga masiva al lado del formulario -->
+    <div class="carga-masiva-container">
+      <h3>Carga Masiva</h3>
+      <input type="file" (change)="onFileSelected($event)" class="form-control">
+      <button class="btn btn-success mt-3" (click)="uploadExcel()">Subir Excel</button>
+    </div>
+  </div>
+  
+  <!-- Tabla dinámica para mostrar los horarios de ambientes -->
+  <div class="table-container mt-5">
+    <h2 class="text-center mb-4">Lista de Horarios de Ambientes</h2>
+    <div class="table-responsive">
+      <app-table [headers]="headers" [data]="horariosAmbientes" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-table>
+    </div>
+  </div>
+  

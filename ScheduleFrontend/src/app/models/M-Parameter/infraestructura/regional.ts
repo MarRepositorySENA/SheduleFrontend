@@ -1,6 +1,6 @@
 export interface Regional {
   id: number;
-  state: boolean;
+  state?: boolean;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string | null;
@@ -8,32 +8,9 @@ export interface Regional {
   nombre: string;
   acronimo: string;
   direccion: string;
-  telefono: string; // Teléfono debe ser validado para cumplir con el formato específico.
-  departamentoId: {
+  telefono: string;
+  departamentoId: {                        // Relación con Departamento
     id: number;
-    state: boolean;
-    createdAt?: string;
-    updatedAt?: string;
-    deletedAt?: string | null;
-    nombre: string;
-    codigo: string;
-    paisId: {
-      id: number;
-      state: boolean;
-      createdAt?: string;
-      updatedAt?: string;
-      deletedAt?: string | null;
-      nombre: string;
-      codigo: string;
-      continenteId: {
-        id: number;
-        state: boolean;
-        createdAt?: string;
-        updatedAt?: string;
-        deletedAt?: string | null;
-        nombre: string;
-        codigo: string;
-      };
-    };
+    nombre?: string;
   };
 }

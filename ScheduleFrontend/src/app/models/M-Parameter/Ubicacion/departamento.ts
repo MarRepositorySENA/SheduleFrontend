@@ -5,10 +5,9 @@ export interface Departamento {
   updatedAt?: string;
   deletedAt?: string | null;
   nombre: string;
-  codigo?: string;
-  paisId: {
+  codigo: string;
+  paisId: {                              // Relación con Pais
     id: number;
-    nombre: string;
-    codigo: string;
+    nombre?: string;
   };
 }

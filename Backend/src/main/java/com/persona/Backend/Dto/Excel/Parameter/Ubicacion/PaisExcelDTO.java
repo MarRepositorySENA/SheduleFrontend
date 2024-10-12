@@ -5,13 +5,23 @@ public class PaisExcelDTO {
 	private String nombre;
     private String codigo;
     private Long continenteId; // Esto se utilizará para enlazar el país con un continente.
+    private Boolean state; 
 
     // Getters y Setters
+    
     public String getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
+    public Boolean getState() {
+		return state;
+	}
+
+	public void setState(Boolean state) {
+		this.state = state;
+	}
+
+	public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 

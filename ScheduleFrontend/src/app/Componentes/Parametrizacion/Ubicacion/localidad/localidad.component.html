@@ -1,49 +1,55 @@
-<div class="container mt-5">
+<div class="form-carga-container">
+  <!-- Formulario para Crear/Editar Localidad -->
+  <div class="form-container">
     <h2 class="text-center mb-4">{{ isEditing ? 'Editar Localidad' : 'Registrar Localidad' }}</h2>
-  
-    <!-- Formulario para Crear/Editar Localidad -->
+
     <form [formGroup]="localidadForm" (ngSubmit)="onSubmit()">
       <div class="mb-3">
-        <label for="nombre" class="form-label">Nombre de la Localidad:</label>
-        <input type="text" id="nombre" class="form-control" formControlName="nombre" required>
+        <label for="nombre" class="form-label">Nombre:</label>
+        <input type="text" id="nombre" class="form-control" formControlName="nombre">
       </div>
+
       <div class="mb-3">
         <label for="codigoPostal" class="form-label">Código Postal:</label>
-        <input type="number" id="codigoPostal" class="form-control" formControlName="codigoPostal" required>
+        <input type="text" id="codigoPostal" class="form-control" formControlName="codigoPostal">
       </div>
+
       <div class="mb-3">
-        <label for="ciudad" class="form-label">Ciudad:</label>
-        <div formGroupName="ciudadId">
-          <ng-select 
-            [items]="ciudades"
-            bindLabel="nombreCompleto"
-            bindValue="id"
-            formControlName="id"
-            placeholder="Seleccione una ciudad"
-            required>
-          </ng-select>
-        </div>
+        <label for="ciudadId" class="form-label">Ciudad:</label>
+        <select id="ciudadId" class="form-control" formControlName="ciudadId">
+          <option *ngFor="let ciudad of ciudades" [value]="ciudad.id">
+            {{ ciudad.nombre }}
+          </option>
+        </select>
       </div>
-      <div class="mb-3">
+
+      <!-- Mostrar estado solo si estamos editando -->
+      <div *ngIf="isEditing" class="mb-3">
         <label for="estado" class="form-label">Estado:</label>
         <div class="form-check form-switch">
-          <input type="checkbox" class="form-check-input" id="estado" formControlName="state">
-          <label class="form-check-label" for="estado">{{ localidadForm.get('state')?.value ? 'Activo' : 'Inactivo' }}</label>
+          <input type="checkbox" class="form-check-input" id="state" formControlName="state">
+          <label class="form-check-label" for="state">{{ localidadForm.get('state')?.value ? 'Activo' : 'Inactivo' }}</label>
         </div>
       </div>
-  
+
       <div class="modal-footer d-flex justify-content-center">
         <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
       </div>
     </form>
   </div>
-  
-  <!-- Tabla de Localidades -->
-  <div class="table-container mt-5">
-    <h2 class="text-center mb-4">Lista de Localidades</h2>
-    <div class="table-responsive">
-      <app-table [headers]="headers" [data]="localidades" (edit)="editLocalidad($event)" (delete)="deleteLocalidad($event)">
-      </app-table>
-    </div>
+
+  <!-- Sección de carga masiva al lado del formulario -->
+  <div class="carga-masiva-container">
+    <h3>Carga Masiva</h3>
+    <input type="file" (change)="onFileSelected($event)" class="form-control">
+    <button class="btn btn-success mt-3" (click)="uploadExcel()">Subir Excel</button>
   </div>
-  
+</div>
+
+<!-- Tabla dinámica para mostrar las localidades -->
+<div class="table-container mt-5">
+  <h2 class="text-center mb-4">Lista de Localidades</h2>
+  <div class="table-responsive">
+    <app-table [headers]="headers" [data]="localidades" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-table>
+  </div>
+</div>

@@ -1,0 +1,54 @@
+<div class="form-carga-container">
+  <!-- Formulario para Crear/Editar Proyecto Formativo Ficha -->
+  <div class="form-container">
+    <h2 class="text-center mb-4">{{ isEditing ? 'Editar Proyecto Formativo Ficha' : 'Registrar Proyecto Formativo Ficha' }}</h2>
+
+    <form [formGroup]="proyectoFormativoForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="proyectoFormativoId" class="form-label">Proyecto Formativo:</label>
+        <select id="proyectoFormativoId" class="form-control" formControlName="proyectoFormativoId">
+          <option *ngFor="let proyectoFormativo of proyectosFormativos" [value]="proyectoFormativo.id">
+            {{ proyectoFormativo.titulo }}
+          </option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="fichaId" class="form-label">Ficha:</label>
+        <select id="fichaId" class="form-control" formControlName="fichaId">
+          <option *ngFor="let ficha of fichas" [value]="ficha.id">
+            {{ ficha.codigo }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Mostrar estado solo si estamos editando -->
+      <div *ngIf="isEditing" class="mb-3">
+        <label for="estado" class="form-label">Estado:</label>
+        <div class="form-check form-switch">
+          <input type="checkbox" class="form-check-input" id="state" formControlName="state">
+          <label class="form-check-label" for="state">{{ proyectoFormativoForm.get('state')?.value ? 'Activo' : 'Inactivo' }}</label>
+        </div>
+      </div>
+
+      <div class="modal-footer d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Sección de carga masiva al lado del formulario -->
+  <div class="carga-masiva-container">
+    <h3>Carga Masiva</h3>
+    <input type="file" (change)="onFileSelected($event)" class="form-control">
+    <button class="btn btn-success mt-3" (click)="uploadExcel()">Subir Excel</button>
+  </div>
+</div>
+
+<!-- Tabla dinámica para mostrar los proyectos formativos fichas -->
+<div class="table-container mt-5">
+  <h2 class="text-center mb-4">Lista de Proyectos Formativos Fichas</h2>
+  <div class="table-responsive">
+    <app-table [headers]="headers" [data]="proyectosFormativosFichas" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-table>
+  </div>
+</div>

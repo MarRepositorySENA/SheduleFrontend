@@ -1,49 +1,57 @@
-<div class="container mt-5">
-  <h2 class="text-center mb-4">{{ isEditing ? 'Editar Módulo' : 'Registrar Módulo' }}</h2>
-
-  <!-- Formulario para Crear/Editar Módulo -->
-  <form [formGroup]="moduloForm" (ngSubmit)="onSubmit()">
-    <div class="mb-3">
-      <label for="nombre" class="form-label">Nombre del Módulo:</label>
-      <input type="text" id="nombre" class="form-control" formControlName="nombre" required>
+<div class="form-carga-container">
+    <!-- Formulario para Crear/Editar Módulo -->
+    <div class="form-container">
+      <h2 class="text-center mb-4">{{ isEditing ? 'Editar Módulo' : 'Registrar Módulo' }}</h2>
+  
+      <form [formGroup]="moduloForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="nombre" class="form-label">Nombre:</label>
+          <input type="text" id="nombre" class="form-control" formControlName="nombre">
+        </div>
+  
+        <div class="mb-3">
+          <label for="ruta" class="form-label">Ruta:</label>
+          <input type="text" id="ruta" class="form-control" formControlName="ruta">
+        </div>
+  
+        <div class="mb-3">
+          <label for="icono" class="form-label">Ícono:</label>
+          <select id="icono" class="form-select" formControlName="icono">
+            <option value="" disabled selected>Seleccione un ícono</option>
+            <option *ngFor="let icono of iconos" [value]="icono.class">
+              {{ icono.name }}
+            </option>
+          </select>
+        </div>
+  
+        <!-- Mostrar estado solo si estamos editando -->
+        <div *ngIf="isEditing" class="mb-3">
+          <label for="state" class="form-label">Estado:</label>
+          <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input" id="state" formControlName="state">
+            <label class="form-check-label" for="state">{{ moduloForm.get('state')?.value ? 'Activo' : 'Inactivo' }}</label>
+          </div>
+        </div>
+  
+        <div class="modal-footer d-flex justify-content-center">
+          <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
+        </div>
+      </form>
     </div>
-    <div class="mb-3">
-      <label for="ruta" class="form-label">Ruta:</label>
-      <input type="text" id="ruta" class="form-control" formControlName="ruta" required>
+  
+    <!-- Sección de carga masiva al lado del formulario -->
+    <div class="carga-masiva-container">
+      <h3>Carga Masiva de Módulos</h3>
+      <input type="file" (change)="onFileSelected($event)" class="form-control">
+      <button class="btn btn-success mt-3" (click)="uploadExcel()">Subir Excel</button>
     </div>
-    <div class="mb-3">
-      <label for="icono" class="form-label">Icono:</label>
-      <ng-select 
-        [items]="iconos"
-        bindLabel="name"
-        bindValue="class"
-        formControlName="icono"
-        placeholder="Seleccione un icono"
-        required>
-        <ng-template ng-option-tmp let-item="item">
-          <i [class]="item.class"></i> {{ item.name }}
-        </ng-template>
-      </ng-select>
-    </div>
-    <div class="mb-3">
-      <label for="estado" class="form-label">Estado:</label>
-      <div class="form-check form-switch">
-        <input type="checkbox" class="form-check-input" id="estado" formControlName="state">
-        <label class="form-check-label" for="estado">{{ moduloForm.get('state')?.value ? 'Activo' : 'Inactivo' }}</label>
-      </div>
-    </div>
-
-    <div class="modal-footer d-flex justify-content-center">
-      <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
-    </div>
-  </form>
-</div>
-
-<!-- Tabla de Módulos -->
-<div class="table-container mt-5">
-  <h2 class="text-center mb-4">Lista de Módulos</h2>
-  <div class="table-responsive">
-    <app-table [headers]="headers" [data]="modulos" (edit)="editModulo($event)" (delete)="deleteModulo($event)">
-    </app-table>
   </div>
-</div>
+  
+  <!-- Tabla dinámica para mostrar los módulos -->
+  <div class="table-container mt-5">
+    <h2 class="text-center mb-4">Lista de Módulos</h2>
+    <div class="table-responsive">
+      <app-table [headers]="headers" [data]="modulos" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-table>
+    </div>
+  </div>
+  

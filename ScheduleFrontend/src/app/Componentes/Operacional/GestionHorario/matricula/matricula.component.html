@@ -1,0 +1,60 @@
+<div class="form-carga-container">
+    <!-- Formulario para Crear/Editar Matrícula -->
+    <div class="form-container">
+      <h2 class="text-center mb-4">{{ isEditing ? 'Editar Matrícula' : 'Registrar Matrícula' }}</h2>
+  
+      <form [formGroup]="matriculaForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="estadoProceso" class="form-label">Estado del Proceso:</label>
+          <input type="text" id="estadoProceso" class="form-control" formControlName="estadoProceso">
+        </div>
+  
+        <div class="mb-3">
+          <label for="personaId" class="form-label">Persona:</label>
+          <select id="personaId" class="form-control" formControlName="personaId.id">
+            <option *ngFor="let persona of personas" [value]="persona.id">
+              {{ persona.primerNombre }} {{ persona.segundoNombre || '' }} {{ persona.primerApellido }}
+            </option>
+          </select>
+        </div>
+  
+        <div class="mb-3">
+          <label for="fichaId" class="form-label">Ficha:</label>
+          <select id="fichaId" class="form-control" formControlName="fichaId.id">
+            <option *ngFor="let ficha of fichas" [value]="ficha.id">
+              {{ ficha.codigo }}
+            </option>
+          </select>
+        </div>
+  
+        <!-- Mostrar estado solo si estamos editando -->
+        <div *ngIf="isEditing" class="mb-3">
+          <label for="estado" class="form-label">Estado:</label>
+          <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input" id="state" formControlName="state">
+            <label class="form-check-label" for="state">{{ matriculaForm.get('state')?.value ? 'Activo' : 'Inactivo' }}</label>
+          </div>
+        </div>
+  
+        <div class="modal-footer d-flex justify-content-center">
+          <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
+        </div>
+      </form>
+    </div>
+  
+    <!-- Sección de carga masiva al lado del formulario -->
+    <div class="carga-masiva-container">
+      <h3>Carga Masiva</h3>
+      <input type="file" (change)="onFileSelected($event)" class="form-control">
+      <button class="btn btn-success mt-3" (click)="uploadExcel()">Subir Excel</button>
+    </div>
+  </div>
+  
+  <!-- Tabla dinámica para mostrar las matrículas -->
+  <div class="table-container mt-5">
+    <h2 class="text-center mb-4">Lista de Matrículas</h2>
+    <div class="table-responsive">
+      <app-table [headers]="headers" [data]="matriculas" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-table>
+    </div>
+  </div>
+  

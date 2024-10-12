@@ -1,63 +1,70 @@
-
-<div class="container mt-5 form-container">
-  <h2 class="text-center mb-4">{{ isEditing ? 'Editar Regional' : 'Registrar Regional' }}</h2>
-
+<div class="form-carga-container">
   <!-- Formulario para Crear/Editar Regional -->
-  <form [formGroup]="regionalForm" (ngSubmit)="onSubmit()">
-    <div class="row">
-      <div class="col-md-4 mb-3 form-group">
-        <label for="nit" class="form-label">NIT:</label>
-        <input type="text" id="nit" class="form-control" formControlName="nit" [ngClass]="{'invalid': regionalForm.get('nit')?.invalid && regionalForm.get('nit')?.touched}" required>
-        <div *ngIf="regionalForm.get('nit')?.invalid && regionalForm.get('nit')?.touched" class="text-danger">NIT es obligatorio y debe ser numérico.</div>
-      </div>
-      <div class="col-md-4 mb-3 form-group">
-        <label for="nombre" class="form-label">Nombre:</label>
-        <input type="text" id="nombre" class="form-control" formControlName="nombre" [ngClass]="{'invalid': regionalForm.get('nombre')?.invalid && regionalForm.get('nombre')?.touched}" required>
-        <div *ngIf="regionalForm.get('nombre')?.invalid && regionalForm.get('nombre')?.touched" class="text-danger">Nombre es obligatorio y debe tener al menos 3 caracteres.</div>
-      </div>
-      <div class="col-md-4 mb-3 form-group">
-        <label for="acronimo" class="form-label">Acrónimo:</label>
-        <input type="text" id="acronimo" class="form-control" formControlName="acronimo" [ngClass]="{'invalid': regionalForm.get('acronimo')?.invalid && regionalForm.get('acronimo')?.touched}" required>
-        <div *ngIf="regionalForm.get('acronimo')?.invalid && regionalForm.get('acronimo')?.touched" class="text-danger">Acrónimo es obligatorio y debe tener un máximo de 5 caracteres.</div>
-      </div>
-    </div>
+  <div class="form-container">
+    <h2 class="text-center mb-4">{{ isEditing ? 'Editar Regional' : 'Registrar Regional' }}</h2>
 
-    <div class="row">
-      <div class="col-md-4 mb-3 form-group">
+    <form [formGroup]="regionalForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="nit" class="form-label">NIT:</label>
+        <input type="text" id="nit" class="form-control" formControlName="nit">
+      </div>
+
+      <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre:</label>
+        <input type="text" id="nombre" class="form-control" formControlName="nombre">
+      </div>
+
+      <div class="mb-3">
+        <label for="acronimo" class="form-label">Acrónimo:</label>
+        <input type="text" id="acronimo" class="form-control" formControlName="acronimo">
+      </div>
+
+      <div class="mb-3">
         <label for="direccion" class="form-label">Dirección:</label>
-        <input type="text" id="direccion" class="form-control" formControlName="direccion" required>
+        <input type="text" id="direccion" class="form-control" formControlName="direccion">
       </div>
-      <div class="col-md-4 mb-3 form-group">
+
+      <div class="mb-3">
         <label for="telefono" class="form-label">Teléfono:</label>
-        <input type="text" id="telefono" class="form-control" formControlName="telefono" [ngClass]="{'invalid': regionalForm.get('telefono')?.invalid && regionalForm.get('telefono')?.touched}" required>
-        <div *ngIf="regionalForm.get('telefono')?.invalid && regionalForm.get('telefono')?.touched" class="text-danger">Teléfono es obligatorio y debe tener entre 7 y 10 dígitos.</div>
+        <input type="text" id="telefono" class="form-control" formControlName="telefono">
       </div>
-      <div class="col-md-4 mb-3 form-group">
-        <label for="departamento" class="form-label">Departamento:</label>
-        <div formGroupName="departamentoId">
-          <ng-select
-            [items]="departamentos"
-            bindLabel="nombre"
-            bindValue="id"
-            formControlName="id"
-            placeholder="Seleccione un departamento"
-            [ngClass]="{'invalid': regionalForm.get('departamentoId.id')?.invalid && regionalForm.get('departamentoId.id')?.touched}">
-          </ng-select>
-          <div *ngIf="regionalForm.get('departamentoId.id')?.invalid && regionalForm.get('departamentoId.id')?.touched" class="text-danger">Departamento es obligatorio.</div>
+
+      <div class="mb-3">
+        <label for="departamentoId" class="form-label">Departamento:</label>
+        <select id="departamentoId" class="form-control" formControlName="departamentoId">
+          <option *ngFor="let departamento of departamentos" [value]="departamento.id">
+            {{ departamento.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Mostrar estado solo si estamos editando -->
+      <div *ngIf="isEditing" class="mb-3">
+        <label for="estado" class="form-label">Estado:</label>
+        <div class="form-check form-switch">
+          <input type="checkbox" class="form-check-input" id="state" formControlName="state">
+          <label class="form-check-label" for="state">{{ regionalForm.get('state')?.value ? 'Activo' : 'Inactivo' }}</label>
         </div>
       </div>
-    </div>
 
-    <div class="modal-footer d-flex justify-content-center">
-      <button type="submit" class="btn">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
-    </div>
-  </form>
+      <div class="modal-footer d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Sección de carga masiva al lado del formulario -->
+  <div class="carga-masiva-container">
+    <h3>Carga Masiva</h3>
+    <input type="file" (change)="onFileSelected($event)" class="form-control">
+    <button class="btn btn-success mt-3" (click)="uploadExcel()">Subir Excel</button>
+  </div>
 </div>
 
-<!-- Tabla de Regionales -->
+<!-- Tabla dinámica para mostrar las regionales -->
 <div class="table-container mt-5">
   <h2 class="text-center mb-4">Lista de Regionales</h2>
   <div class="table-responsive">
-    <app-table [headers]="headers" [data]="regionales" (edit)="editRegional($event)" (delete)="deleteRegional($event)"></app-table>
+    <app-table [headers]="headers" [data]="regionales" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-table>
   </div>
 </div>

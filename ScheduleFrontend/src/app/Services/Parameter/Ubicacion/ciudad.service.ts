@@ -8,13 +8,14 @@ import { Ciudad } from '../../../models/M-Parameter/Ubicacion/ciudad';
 })
 export class CiudadService {
   private apiUrl = 'http://localhost:9000/base/api/v1/base/parameter/ubicacion/ciudad';
+  private apiCargaMasivaUrl = 'http://localhost:9000/base/api/ubicacion/carga_masiva/ciudades'; 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getCiudades(): Observable<Ciudad[]> {
     return this.http.get<Ciudad[]>(this.apiUrl);
   }
-  
+
   getCiudadesSinEliminar(): Observable<Ciudad[]> {
     return this.http.get<Ciudad[]>(`${this.apiUrl}/consultarRegistrosSinEliminar`);
   }
@@ -29,5 +30,11 @@ export class CiudadService {
 
   deleteCiudad(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  cargarMasivo(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(this.apiCargaMasivaUrl, formData);
   }
 }

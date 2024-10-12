@@ -8,13 +8,14 @@ import { Localidad } from '../../../models/M-Parameter/Ubicacion/localidad';
 })
 export class LocalidadService {
   private apiUrl = 'http://localhost:9000/base/api/v1/base/parameter/ubicacion/localidad';
+  private apiCargaMasivaUrl = 'http://localhost:9000/base/api/ubicacion/carga_masiva/localidades'; 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getLocalidades(): Observable<Localidad[]> {
     return this.http.get<Localidad[]>(this.apiUrl);
   }
-  
+
   getLocalidadesSinEliminar(): Observable<Localidad[]> {
     return this.http.get<Localidad[]>(`${this.apiUrl}/consultarRegistrosSinEliminar`);
   }
@@ -29,5 +30,11 @@ export class LocalidadService {
 
   deleteLocalidad(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  cargarMasivo(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(this.apiCargaMasivaUrl, formData);
   }
 }

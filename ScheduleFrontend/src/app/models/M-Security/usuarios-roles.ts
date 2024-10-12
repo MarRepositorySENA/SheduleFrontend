@@ -1,24 +1,15 @@
 export interface UsuariosRoles {
+  id: number;
+  state?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string | null;
+  usuarioId: {                                // Relación con Usuario
     id: number;
-    state: boolean;
-    createdAt?: string;
-    updatedAt?: string;
-    deletedAt?: string | null;
-    usuarioId: {
-      id: number;
-      usuarioName: string;
-      personaId: {
-        id: number;
-        primerNombre: string;
-        segundoNombre?: string;
-        primerApellido: string;
-        segundoApellido?: string;
-      };
-    };
-    roleId: {
-      id: number;
-      nombre: string;
-      descripcion?: string;
-    };
-  }
-  
+    usuarioName: string;
+  };
+  roleId: {                                   // Relación con Role
+    id: number;
+    nombre: string;
+  };
+}

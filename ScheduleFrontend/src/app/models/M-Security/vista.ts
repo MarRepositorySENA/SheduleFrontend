@@ -1,16 +1,14 @@
 export interface Vista {
   id: number;
-  nombre: string;
-  descripcion: string;
-  ruta: string;
-  state: boolean;
+  state?: boolean;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string | null;
-  moduloId: {
+  nombre: string;
+  descripcion: string;
+  ruta: string;
+  moduloId: {                                  // Relación con Modulo
     id: number;
-    nombre?: string;
-    ruta?: string;
-    icono?: string;
+    nombre: string;
   };
 }
