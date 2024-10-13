@@ -1,0 +1,23 @@
+<div class="actualizar-contrasenia">
+  <h2>Actualizar Contraseña</h2>
+  <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="newPassword">Nueva contraseña:</label>
+      <input id="newPassword" formControlName="newPassword" type="password" class="form-control" placeholder="Ingrese su nueva contraseña" />
+      <div *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched">
+        <small class="text-danger">Este campo es obligatorio.</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="confirmPassword">Confirmar contraseña:</label>
+      <input id="confirmPassword" formControlName="confirmPassword" type="password" class="form-control" placeholder="Confirme su contraseña" />
+      <div *ngIf="passwordForm.hasError('passwordMismatch')">
+        <small class="text-danger">Las contraseñas no coinciden.</small>
+      </div>
+    </div>
+
+    <a href="http://localhost:4200/auth/actualizar-contrasenia?email={email}" class="btn">Restablecer Contraseña</a>
+
+  </form>
+</div>

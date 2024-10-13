@@ -1,1 +1,12 @@
-<p>recuperar-contrasenia works!</p>
+  <div class="recuperar-contrasenia">
+    <h2>Recuperar Contraseña</h2>
+    <div class="form-group">
+      <label for="email">Correo electrónico:</label>
+      <input id="email" [(ngModel)]="email" type="email" class="form-control" placeholder="Ingrese su correo electrónico" />
+    </div>
+    <button (click)="sendResetLink()" class="btn btn-primary">Enviar enlace de recuperación</button>
+    <div *ngIf="isEmailSent">
+
+      <p>Hemos enviado un enlace a tu correo. Revisa tu bandeja de entrada para restablecer la contraseña.</p>
+    </div>
+  </div>

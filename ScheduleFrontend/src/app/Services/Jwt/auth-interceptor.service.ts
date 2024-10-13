@@ -13,6 +13,11 @@ export class AuthInterceptorService implements HttpInterceptor {
 
     const token = localStorage.getItem('token');
     console.log(token);
+
+    if (req.url.includes('/api/v1/base/security/usuario/send-password-reset') ||req.url.includes('/api/v1/base/security/usuario/actualizar-contrasenia')) {
+      // No agregar el token, simplemente pasar la solicitud
+      return next.handle(req);
+    }
     if (token) {
       const clonedRequest = req.clone({
         setHeaders: {

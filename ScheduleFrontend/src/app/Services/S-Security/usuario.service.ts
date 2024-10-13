@@ -9,7 +9,8 @@ import { Usuario } from '../../models/M-Security/usuario';
 })
 export class UsuarioService {
   private apiUrl = 'http://localhost:9000/base/api/v1/base/security/usuario';
-  
+  private encodedEmail: any;
+
 
   constructor(private http: HttpClient) {}
 
@@ -32,5 +33,18 @@ export class UsuarioService {
   deleteUsuario(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  recuperarContrasenia(email: string): Observable<void> {
+    const encodedEmail = encodeURIComponent(email); // Codifica el email
+    return this.http.post<void>(`${this.apiUrl}/send-password-reset/${encodedEmail}`, null);
+  }
+
+  actualizarContrasenia(email: string | null, nuevaContrasenia: string): Observable<void> {
+    const body = { email, nuevaContrasenia };
+    return this.http.put<void>(`${this.apiUrl}/actualizar-contrasenia/${(this.encodedEmail)}`, body);
+  }
+
+
+
 
 }

@@ -2,6 +2,8 @@ package com.persona.Backend.Service.Security;
 
 import java.util.List;
 import java.util.Optional;
+
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -63,6 +65,21 @@ public class UsuarioService extends BaseService<Usuario> implements IUsuarioServ
 		String encodedPassword = passwordEncoder.encode(usuario.getContrasenia());
 		usuario.setContrasenia(encodedPassword);
 		return repository.save(usuario);
+	}
+
+	@Transactional
+	public String actualizarContrasenia(String email, String nuevaContrasenia) throws Exception {
+		Optional<Usuario> usuarioOptional = repository.findByEmail(email);
+
+		if (usuarioOptional.isPresent()) {
+			Usuario usuario = usuarioOptional.get();
+			String encodedPassword = passwordEncoder.encode(nuevaContrasenia);
+			usuario.setContrasenia(encodedPassword);
+			repository.save(usuario);
+			return "Contraseña actualizada exitosamente.";
+		} else {
+			throw new Exception("Usuario no encontrado.");
+		}
 	}
 
 }

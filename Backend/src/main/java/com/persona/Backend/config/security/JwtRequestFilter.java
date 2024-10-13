@@ -35,6 +35,16 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+        final String path = request.getRequestURI();
+
+        // Ignorar rutas de restablecimiento de contraseña y envío de correo
+        if (path.startsWith("/api/v1/base/security/usuario/send-password-reset") ||
+                path.startsWith("/api/v1/base/security/usuario/actualizar-contrasenia")) {
+            // Permitir el acceso sin autenticación para estas rutas
+            chain.doFilter(request, response);
+            return;
+        }
+
         final String authorizationHeader = request.getHeader("Authorization");
 
         String username = null;

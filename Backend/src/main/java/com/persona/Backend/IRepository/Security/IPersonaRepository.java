@@ -1,10 +1,13 @@
 package com.persona.Backend.IRepository.Security;
 
 
+import com.persona.Backend.Entity.Security.Usuario;
 import org.springframework.stereotype.Repository;
 
 import com.persona.Backend.Entity.Security.Persona;
 import com.persona.Backend.IRepository.IBaseRepository;
+
+import java.util.Optional;
 
 @Repository
 public interface IPersonaRepository extends IBaseRepository<Persona, Long>{

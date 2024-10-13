@@ -24,7 +24,7 @@
 
       <button type="submit" [disabled]="loginForm.invalid" class="btn btn-primary">Iniciar Sesión</button>
       <div class="additional-info">
-        <p>¿Olvidaste tu contraseña? <a href="#">Recuperar aquí</a></p>
+        <p>¿Olvidaste tu contraseña? <a [routerLink]="['/recuperar-contrasenia']">Recuperar aquí</a></p>
       </div>
     </form>
   </div>

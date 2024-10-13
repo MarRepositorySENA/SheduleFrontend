@@ -65,5 +65,10 @@ public interface IUsuarioRepository extends IBaseRepository<Usuario, Long>{
 	List<PermisosDto> validarPermisos(String user);
 
 	Optional<Usuario> findByUsuarioNombre(String usuario);
+
+	@Query(value = "select * from usuario " +
+			"inner join persona on usuario.persona_id = persona.id " +
+			"where persona.email = :email", nativeQuery = true)
+	Optional<Usuario> findByEmail(String email);
 }
  
