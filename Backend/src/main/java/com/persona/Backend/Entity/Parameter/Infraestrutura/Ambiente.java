@@ -53,6 +53,14 @@ public class Ambiente extends BaseEntity {
 		this.cupo = cupo;
 	}
 
+	public Piso getPisoId() {
+		return pisoId;
+	}
+
+	public void setPisoId(Piso pisoId) {
+		this.pisoId = pisoId;
+	}
+
 	public Especialidad getEspecialidadId() {
 		return especialidadId;
 	}
@@ -60,5 +68,7 @@ public class Ambiente extends BaseEntity {
 	public void setEspecialidadId(Especialidad especialidadId) {
 		this.especialidadId = especialidadId;
 	}
+
+
 
 }

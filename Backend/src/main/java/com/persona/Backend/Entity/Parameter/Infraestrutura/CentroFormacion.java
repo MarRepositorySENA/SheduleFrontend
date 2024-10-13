@@ -35,13 +35,20 @@ public class CentroFormacion extends BaseEntity {
 	@JoinColumn(name = "cuidad_id", nullable = false, unique = false)
 	private Ciudad ciudadId;
 
-	
 	public String getNombre() {
 		return nombre;
 	}
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 
 	public String getDireccion() {
@@ -75,5 +82,8 @@ public class CentroFormacion extends BaseEntity {
 	public void setCiudadId(Ciudad ciudadId) {
 		this.ciudadId = ciudadId;
 	}
+
+	
+	
 
 }

@@ -48,6 +48,8 @@ public class Matricula extends BaseEntity {
 	public void setFichaId(Ficha fichaId) {
 		this.fichaId = fichaId;
 	}
+
+
 	
 	
 }
