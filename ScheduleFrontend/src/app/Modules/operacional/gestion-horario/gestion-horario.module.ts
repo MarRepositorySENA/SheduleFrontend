@@ -11,6 +11,7 @@ import { HorariosAmbientesComponent } from '../../../Componentes/Operacional/Ges
 import { JornadaComponent } from '../../../Componentes/Operacional/GestionHorario/jornada/jornada.component';
 import { MatriculaComponent } from '../../../Componentes/Operacional/GestionHorario/matricula/matricula.component';
 import { ProgramacionFichaComponent } from '../../../Componentes/Operacional/GestionHorario/programacion-ficha/programacion-ficha.component';
+import { FullCalendarModule } from '@fullcalendar/angular';
 
 
 
@@ -29,7 +30,7 @@ import { ProgramacionFichaComponent } from '../../../Componentes/Operacional/Ges
   imports: [
     CommonModule,
     GestionHorarioRoutingModule, 
-    ReactiveFormsModule, NgSelectModule, TableComponent, FormsModule
+    ReactiveFormsModule, NgSelectModule, TableComponent, FormsModule, FullCalendarModule,
   ]
 })
 export class GestionHorarioModule { }

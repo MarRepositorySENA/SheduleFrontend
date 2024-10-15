@@ -1,0 +1,23 @@
+<div class="calendar-container">
+  <!-- Contenedor del encabezado con el título del calendario -->
+  <div class="header-container">
+    <h2 class="text-center">Calendario de Horarios</h2>
+  </div>
+
+  <!-- Contenedor del calendario de FullCalendar -->
+  <div class="calendar-body">
+    <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+  </div>
+
+  <!-- Sección de leyenda de colores -->
+  <div class="legend-container">
+    <div class="legend-item">
+      <div class="color-box color-green"></div>
+      <span>Horarios Empleados</span>
+    </div>
+    <div class="legend-item">
+      <div class="color-box color-orange"></div>
+      <span>Horarios Ambientes</span>
+    </div>
+  </div>
+</div>

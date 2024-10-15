@@ -76,7 +76,8 @@ export class MenuComponent implements OnInit {
                 { nombre: 'Horarios Ambientes', ruta: 'operacional/gestion_horario/registro_horarios_ambientes' },
                 { nombre: 'Jornadas', ruta: 'operacional/gestion_horario/registro_jornada' },
                 { nombre: 'Matrícula', ruta: 'operacional/gestion_horario/registro_matricula' },
-                { nombre: 'Programación Fichas', ruta: 'operacional/gestion_horario/registro_programacion_ficha' }
+                { nombre: 'Programación Fichas', ruta: 'operacional/gestion_horario/registro_programacion_ficha' },
+                { nombre: 'Calendario General de Horarios', ruta: 'operacional/calendario_horarios_general' }
               ]
             },
             {

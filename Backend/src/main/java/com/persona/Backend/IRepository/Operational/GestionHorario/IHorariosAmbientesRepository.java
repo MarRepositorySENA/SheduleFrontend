@@ -14,10 +14,11 @@ import com.persona.Backend.IRepository.IBaseRepository;
 @Repository
 public interface IHorariosAmbientesRepository extends IBaseRepository<HorariosAmbientes, Long> {
 
-	  @Query("SELECT COUNT(ha) FROM HorariosAmbientes ha WHERE ha.ambienteId.id = :ambienteId AND " +
-	           "(ha.horaInicio BETWEEN :horaInicio AND :horaFin OR ha.horaFin BETWEEN :horaInicio AND :horaFin)")
-	    Long countConflictingAmbientes(@Param("ambienteId") Long ambienteId, 
-	                                   @Param("horaInicio") LocalDateTime horaInicio, 
-	                                   @Param("horaFin") LocalDateTime horaFin);
+	@Query("SELECT COUNT(ha) FROM HorariosAmbientes ha WHERE ha.ambienteId.id = :ambienteId AND " +
+		       "(:horaInicio BETWEEN ha.horaInicio AND ha.horaFin OR :horaFin BETWEEN ha.horaInicio AND ha.horaFin OR " +
+		       "ha.horaInicio BETWEEN :horaInicio AND :horaFin OR ha.horaFin BETWEEN :horaInicio AND :horaFin)")
+		Long countConflictingAmbientes(@Param("ambienteId") Long ambienteId, 
+		                               @Param("horaInicio") LocalDateTime horaInicio, 
+		                               @Param("horaFin") LocalDateTime horaFin);
 
 }

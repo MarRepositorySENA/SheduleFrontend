@@ -11,6 +11,8 @@ import { FichasEmpleadosComponent } from '../../../Componentes/Operacional/Gesti
 import { FuncionesComponent } from '../../../Componentes/Operacional/GestionPersonal/funciones/funciones.component';
 import { HorariosEmpleadosComponent } from '../../../Componentes/Operacional/GestionPersonal/horarios-empleados/horarios-empleados.component';
 import { TipoContratoComponent } from '../../../Componentes/Operacional/GestionPersonal/tipo-contrato/tipo-contrato.component';
+import { CalendarioEmpleadosComponent } from '../../../Componentes/Operacional/GestionPersonal/calendario-empleados/calendario-empleados.component';
+import { FullCalendarModule } from '@fullcalendar/angular';
 
 
 
@@ -21,14 +23,15 @@ import { TipoContratoComponent } from '../../../Componentes/Operacional/GestionP
     FichasEmpleadosComponent,
     FuncionesComponent,
     HorariosEmpleadosComponent,
-    TipoContratoComponent
+    TipoContratoComponent,
+    CalendarioEmpleadosComponent
 
 
   ],
   imports: [
     CommonModule,
     GestionPersonalRoutingModule,
-    ReactiveFormsModule, NgSelectModule, TableComponent, FormsModule
+    ReactiveFormsModule, NgSelectModule, TableComponent, FormsModule, FullCalendarModule,
   ]
 })
 export class GestionPersonalModule { }

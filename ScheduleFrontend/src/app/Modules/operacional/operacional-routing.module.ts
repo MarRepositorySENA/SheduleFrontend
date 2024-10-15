@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CalendarioHorariosComponent } from '../../Componentes/calendario-horarios/calendario-horarios.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
   {
     path: 'planificacion_formativa',
     loadChildren: () => import('./planificacion-formativa/planificacion-formativa.module').then(m => m.PlanificacionFormativaModule)
+  },
+  {
+    path: 'calendario_horarios_general', // Añade esta ruta
+    component: CalendarioHorariosComponent // Usa el componente aquí
   }
 ];
 

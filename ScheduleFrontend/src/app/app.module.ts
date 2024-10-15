@@ -12,6 +12,7 @@ import { InformacionModule } from './Modules/informacion/informacion.module';
 import { LoginComponent } from './Componentes/Pages/Auth/login/login.component';
 import { AuthModule } from './Modules/auth/auth.module';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,6 +27,7 @@ import { AuthModule } from './Modules/auth/auth.module';
     FontAwesomeModule,       // Importado de manera global para usar íconos
    SharedModule,      // Importar SharedModule para usar NavbarComponent y MenuComponent globalmente
   InformacionModule,
+  
   ],
   providers: [
     AuthService,

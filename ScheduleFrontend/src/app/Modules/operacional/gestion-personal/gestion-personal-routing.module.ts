@@ -5,6 +5,7 @@ import { EmpleadoComponent } from '../../../Componentes/Operacional/GestionPerso
 import { FichasEmpleadosComponent } from '../../../Componentes/Operacional/GestionPersonal/fichas-empleados/fichas-empleados.component';
 import { FuncionesComponent } from '../../../Componentes/Operacional/GestionPersonal/funciones/funciones.component';
 import { TipoContratoComponent } from '../../../Componentes/Operacional/GestionPersonal/tipo-contrato/tipo-contrato.component';
+import { CalendarioEmpleadosComponent } from '../../../Componentes/Operacional/GestionPersonal/calendario-empleados/calendario-empleados.component';
 
 const routes: Routes = [
   { path: 'registro_cargo', component: CargoComponent },
@@ -13,6 +14,9 @@ const routes: Routes = [
   { path: 'registro_funciones', component: FuncionesComponent },
   { path: 'registro_horarios_empleados', component: CargoComponent },
   { path: 'registro_tipo_contrato', component: TipoContratoComponent },
+  { path: 'calendario_horarios', component: CalendarioEmpleadosComponent },
+
+
 
 
 
