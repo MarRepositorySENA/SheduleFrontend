@@ -56,13 +56,11 @@ export class ProgramaFormacionComponent implements OnInit {
       id: [0],
       nombre: ['', Validators.required],
       descripcion: ['', [Validators.required, Validators.minLength(10)]],
-      duraccion: [0, [Validators.required, Validators.min(1)]], // Duración mínima de 1 hora
-      modalidadId: [null, Validators.required],
-      nivelFormacionId: [null, Validators.required],
-      tipoFormacionId: [null, Validators.required],
-      state: [true, Validators.required],
-      createdAt: [''],
-      updatedAt: ['']
+      duraccion: [0, [Validators.required, Validators.min(1)]],
+      modalidadId: [0, Validators.required],
+      nivelFormacionId:  [0, Validators.required],
+      tipoFormacionId: [0, Validators.required],
+      state: [true] // Puedes inicializarlo como desees
     });
   }
 
@@ -116,7 +114,19 @@ export class ProgramaFormacionComponent implements OnInit {
       return;
     }
 
-    const programaFormacion: ProgramaFormacion = this.programaFormacionForm.value;
+    const formValue = this.programaFormacionForm.value;
+
+    const programaFormacion: ProgramaFormacion = {
+      nombre: formValue.nombre,
+      descripcion: formValue.descripcion,
+      duraccion: formValue.duraccion,
+      modalidadId: { id: formValue.modalidadId }, // Aquí es donde construyes el objeto
+      nivelFormacionId: { id: formValue.nivelFormacionId }, // Aquí lo haces también
+      tipoFormacionId: { id: formValue.tipoFormacionId }, // Aquí lo haces también
+      state: formValue.state // Puedes establecer el estado desde el formulario
+    };
+
+    console.log('Programa de formación enviado:', programaFormacion);
 
     if (this.isEditing) {
       this.updateProgramaFormacion(programaFormacion);
@@ -183,14 +193,17 @@ export class ProgramaFormacionComponent implements OnInit {
       nombre: item.nombre,
       descripcion: item.descripcion,
       duraccion: item.duraccion,
-      modalidadId: item.modalidadId.id,
-      nivelFormacionId: item.nivelFormacionId.id,
-      tipoFormacionId: item.tipoFormacionId.id,
+      modalidadId: { id: item.modalidadId.id }, // Verifica que item.modalidadId.id tenga un valor válido
+      nivelFormacionId: { id: item.nivelFormacionId.id }, // Verifica que item.nivelFormacionId.id tenga un valor válido
+      tipoFormacionId: { id: item.tipoFormacionId.id }, // Verifica que item.tipoFormacionId.id tenga un valor válido
       state: item.state,
       createdAt: item.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString()
     });
   }
+
+
+
 
   onDelete(id: number): void {
     Swal.fire({

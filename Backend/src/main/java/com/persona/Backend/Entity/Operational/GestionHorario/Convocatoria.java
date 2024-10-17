@@ -17,10 +17,10 @@ public class Convocatoria extends BaseEntity {
 	private String codigo;
 
 	@Column(name = "anio",  nullable = false)
-	private Year anio;
+	private int anio;
 	
 	@Column(name = "trimestre",  nullable = false)
-	private NumeroTrimestre trimestre;
+	private String trimestre;
 
 	public String getCodigo() {
 		return codigo;
@@ -30,23 +30,19 @@ public class Convocatoria extends BaseEntity {
 		this.codigo = codigo;
 	}
 
-	public Year getAnio() {
+	public int getAnio() {
 		return anio;
 	}
 
-	public void setAnio(Year anio) {
+	public void setAnio(int anio) {
 		this.anio = anio;
 	}
 
-	public NumeroTrimestre getTrimestre() {
+	public String getTrimestre() {
 		return trimestre;
 	}
 
-	public void setTrimestre(NumeroTrimestre trimestre) {
+	public void setTrimestre(String trimestre) {
 		this.trimestre = trimestre;
 	}
-
-	
-	
-	
 }

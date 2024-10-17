@@ -9,3 +9,4 @@ export interface Competencia {
   descripcion: string;
   duraccion: number;
 }
+

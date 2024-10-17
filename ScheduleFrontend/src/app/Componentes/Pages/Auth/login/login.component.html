@@ -3,7 +3,7 @@
   <div class="background-image"></div>
   <div class="login-form-container">
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
-      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Sena_logo.png" alt="SENA Logo" class="sena-logo" />
+      <img src="https://th.bing.com/th/id/R.17b20a22c3c57c0db3274dcbf715ac7c?rik=wgYlSZzJK%2f8FgQ&riu=http%3a%2f%2f1.bp.blogspot.com%2f-t5a7q_7EnAo%2fTblvssXa-vI%2fAAAAAAAAAAg%2f8kk8aHZDbN4%2fs1600%2flogo_sena.png&ehk=4uixTZwcJFKCl6hTESwnl3yKT2Bdz1vXPtFs0409oDo%3d&risl=&pid=ImgRaw&r=0 " alt="SENA Logo" class="sena-logo" />
       <h2>Iniciar Sesión</h2>
 
       <div class="form-group" [ngClass]="{'invalid': loginForm.get('username')?.invalid && (loginForm.get('username')?.touched || loginForm.get('username')?.dirty)}">

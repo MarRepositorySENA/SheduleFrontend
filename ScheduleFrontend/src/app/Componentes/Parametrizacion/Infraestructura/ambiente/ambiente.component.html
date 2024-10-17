@@ -21,7 +21,7 @@
 
       <div class="mb-3">
         <label for="especialidadId" class="form-label">Especialidad:</label>
-        <select id="especialidadId" class="form-control" formControlName="especialidadId">
+        <select id="especialidadId" class="form-control" formControlName="especialidadId.id">
           <option *ngFor="let especialidad of especialidades" [value]="especialidad.id">
             {{ especialidad.nombre }}
           </option>

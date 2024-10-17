@@ -87,7 +87,7 @@ export class PaisComponent implements OnInit {
 
   createPais(pais: Pais): void {
     pais.createdAt = new Date().toISOString();
-    pais.updatedAt = new Date().toISOString();
+
 
     this.paisService.createPais(pais).subscribe(
       response => {

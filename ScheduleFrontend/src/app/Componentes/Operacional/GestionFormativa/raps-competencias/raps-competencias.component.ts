@@ -86,19 +86,37 @@ export class RapsCompetenciasComponent implements OnInit {
   }
 
   onSubmit(): void {
+    // Verifica si el formulario es válido
     if (this.rapsCompetenciasForm.invalid) {
       Swal.fire('Error', 'Por favor complete todos los campos obligatorios.', 'error');
       return;
     }
 
-    const rapsCompetencias: RapsCompetencias = this.rapsCompetenciasForm.value;
+    // Obtén los valores del formulario
+    const formValue = this.rapsCompetenciasForm.value;
 
+    // Construye el objeto 'RapsCompetencias'
+    const rapsCompetencias: RapsCompetencias = {
+      id: 0,
+      competenciaId: {
+        id: formValue.competenciaId,
+        nombre: ''
+      }, // Si es una relación con otra entidad
+      rapId: {
+        id: formValue.rapId,
+        descripcion: ''
+      }, // Si es una relación con otra entidad
+      state: formValue.state // Puedes establecer el estado como sea necesario
+    };
+
+    // Aquí puedes manejar si estás creando o editando
     if (this.isEditing) {
       this.updateRapsCompetencias(rapsCompetencias);
     } else {
       this.createRapsCompetencias(rapsCompetencias);
     }
   }
+
 
   createRapsCompetencias(rapsCompetencias: RapsCompetencias): void {
     rapsCompetencias.createdAt = new Date().toISOString();

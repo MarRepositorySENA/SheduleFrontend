@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-table',
   standalone: true, // Hacer el componente standalone
-  imports: [CommonModule], 
+  imports: [CommonModule],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
@@ -17,6 +17,7 @@ export class TableComponent {
 
   onEdit(item: any): void {
     this.edit.emit(item);
+    console.log(item)
   }
 
   onDelete(id: number): void {

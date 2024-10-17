@@ -36,14 +36,9 @@ export class ConvocatoriaComponent implements OnInit {
     this.convocatoriaForm = this.fb.group({
       id: [0],
       codigo: ['', Validators.required],
-      anio: this.fb.group({
-        value: [null, [Validators.required, Validators.min(1900)]],
-        leap: [false]
-      }),
+      anio:  ['', Validators.required],
       trimestre: ['', Validators.required],
-      state: [true, Validators.required],
-      createdAt: [''],
-      updatedAt: ['']
+      state: [true, Validators.required]
     });
   }
 
@@ -59,19 +54,36 @@ export class ConvocatoriaComponent implements OnInit {
   }
 
   onSubmit(): void {
+    // Verifica si el formulario es válido
     if (this.convocatoriaForm.invalid) {
       Swal.fire('Error', 'Por favor complete todos los campos obligatorios.', 'error');
       return;
     }
 
-    const convocatoria: Convocatoria = this.convocatoriaForm.value;
+    // Obtén los valores del formulario
+    const formValue = this.convocatoriaForm.value;
 
+    // Construye el objeto 'Convocatoria'
+    const convocatoria: Convocatoria = {
+      id:formValue.id ,
+      codigo: formValue.codigo,
+      anio: formValue.anio,
+      trimestre: formValue.trimestre,
+      state: formValue.state,
+      createdAt: formValue.createdAt,
+      updatedAt: formValue.updatedAt,
+      deletedAt: formValue.deletedAt
+
+    };
+
+    // Aquí puedes manejar si estás creando o editando
     if (this.isEditing) {
       this.updateConvocatoria(convocatoria);
     } else {
       this.createConvocatoria(convocatoria);
     }
   }
+
 
   createConvocatoria(convocatoria: Convocatoria): void {
     convocatoria.createdAt = new Date().toISOString();
@@ -128,9 +140,7 @@ export class ConvocatoriaComponent implements OnInit {
       codigo: item.codigo,
       anio: item.anio,
       trimestre: item.trimestre,
-      state: item.state,
-      createdAt: item.createdAt || new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      state: item.state
     });
   }
 

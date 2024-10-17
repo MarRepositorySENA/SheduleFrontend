@@ -60,18 +60,10 @@ export class FichaComponent implements OnInit {
       fechaFin: ['', Validators.required],
       cupo: [0, [Validators.required, Validators.min(1)]],
       etapa: ['', Validators.required],
-      jornadaId: this.fb.group({
-        id: [null, Validators.required]
-      }),
-      convocatoriaId: this.fb.group({
-        id: [null, Validators.required]
-      }),
-      programaFormacionId: this.fb.group({
-        id: [null, Validators.required]
-      }),
-      state: [true, Validators.required],
-      createdAt: [''],
-      updatedAt: ['']
+      jornadaId: [0, Validators.required],
+      convocatoriaId: [0, Validators.required],
+      programaFormacionId: [0, Validators.required],
+      state: [true, Validators.required]
     });
   }
 
@@ -120,13 +112,48 @@ export class FichaComponent implements OnInit {
   }
 
   onSubmit(): void {
+    // Verifica si el formulario es válido
     if (this.fichaForm.invalid) {
       Swal.fire('Error', 'Por favor complete todos los campos obligatorios.', 'error');
       return;
     }
 
-    const ficha: Ficha = this.fichaForm.value;
+    // Obtén los valores del formulario
+    const formValue = this.fichaForm.value;
 
+    // Construye el objeto 'Ficha'
+    const ficha: Ficha = {
+      // No establecemos id al crear una nueva ficha, solo se asigna si estamos editando
+      id: this.isEditing ? formValue.id : undefined,
+      state: formValue.state, // Establece el estado desde el formulario
+      codigo: formValue.codigo,
+      fechaInicio: formValue.fechaInicio,
+      fechaFin: formValue.fechaFin,
+      cupo: formValue.cupo,
+      etapa: formValue.etapa,
+      jornadaId: {
+        id: formValue.jornadaId // Aquí asignas el ID de jornada
+      },
+      convocatoriaId: {
+        id: formValue.convocatoriaId // Aquí asignas el ID de convocatoria
+      },
+      programaFormacionId: {
+        id: formValue.programaFormacionId, // ID del programa de formación
+        modalidadId: {
+          id: formValue.modalidadId // ID de la modalidad
+        },
+        nivelFormacionId: {
+          id: formValue.nivelFormacionId // ID del nivel de formación
+        },
+        tipoFormacionId: {
+          id: formValue.tipoFormacionId // ID del tipo de formación
+        }
+      }
+    };
+
+    console.log('Ficha enviada:', ficha);
+
+    // Aquí decides si es una creación o actualización
     if (this.isEditing) {
       this.updateFicha(ficha);
     } else {

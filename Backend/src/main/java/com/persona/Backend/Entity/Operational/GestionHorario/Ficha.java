@@ -1,5 +1,6 @@
 package com.persona.Backend.Entity.Operational.GestionHorario;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.persona.Backend.Entity.BaseEntity;
@@ -21,10 +22,10 @@ public class Ficha extends BaseEntity{
 	private String codigo;
 
 	@Column(name = "fecha_inicio",  nullable = false)
-	private LocalDateTime fechaInicio;
+	private LocalDate fechaInicio;
 	
 	@Column(name = "fecha_fin",  nullable = false)
-	private LocalDateTime fechaFin;
+	private LocalDate fechaFin;
 	
 	@Column(name = "cupo",  nullable = false)
 	private Integer cupo;
@@ -32,11 +33,11 @@ public class Ficha extends BaseEntity{
 	@Column(name = "etapa",  nullable = false)
 	private String etapa;
 	
-	@OneToOne(fetch = FetchType.EAGER, optional = false)
+	@ManyToOne	(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "jornada_id", nullable = false, unique = false)
 	private Jornada jornadaId;
 
-	@OneToOne(fetch = FetchType.EAGER, optional = false)
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "convocatoria_id", nullable = false, unique = false)
 	private Convocatoria convocatoriaId;
 	
@@ -52,20 +53,20 @@ public class Ficha extends BaseEntity{
 		this.codigo = codigo;
 	}
 
-	public LocalDateTime getFechaInicio() {
+	public LocalDate getFechaInicio() {
 		return fechaInicio;
 	}
 
-	public void setFechaInicio(LocalDateTime fechaInicio) {
-		this.fechaInicio = fechaInicio;
-	}
-
-	public LocalDateTime getFechaFin() {
+	public LocalDate getFechaFin() {
 		return fechaFin;
 	}
 
-	public void setFechaFin(LocalDateTime fechaFin) {
+	public void setFechaFin(LocalDate fechaFin) {
 		this.fechaFin = fechaFin;
+	}
+
+	public void setFechaInicio(LocalDate fechaInicio) {
+		this.fechaInicio = fechaInicio;
 	}
 
 	public Integer getCupo() {

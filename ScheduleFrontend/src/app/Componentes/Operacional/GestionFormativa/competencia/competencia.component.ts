@@ -40,9 +40,7 @@ export class CompetenciaComponent implements OnInit {
       nombre: ['', Validators.required],
       descripcion: ['', [Validators.required, Validators.minLength(10)]],
       duraccion: [0, [Validators.required, Validators.min(1)]], // Duración mínima de 1 hora
-      state: [true, Validators.required],
-      createdAt: [''],
-      updatedAt: ['']
+      state: [true, Validators.required]
     });
   }
 

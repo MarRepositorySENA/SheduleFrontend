@@ -46,7 +46,9 @@ export class AmbienteComponent implements OnInit {
       codigo: ['', [Validators.required, Validators.minLength(3)]],
       nombre: ['', Validators.required],
       cupo: [0, [Validators.required, Validators.min(1)]], // Cupo con validación mínima de 1
-      especialidadId: [null, Validators.required], // Llave foránea con Especialidad
+      especialidadId: this.fb.group({   // Cambiado a FormGroup
+        id: [0, Validators.required] // Agregado id a tipoFormacionId
+      }), // Llave foránea con Especialidad
       state: [true, Validators.required],
       createdAt: [''],
       updatedAt: ['']

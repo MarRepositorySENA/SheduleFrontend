@@ -5,9 +5,6 @@ export interface Convocatoria {
   updatedAt?: string;
   deletedAt?: string | null;
   codigo: string;
-  anio: {                                 // Objeto para el año
-    value: number;
-    leap: boolean;
-  };
+  anio : number;
   trimestre: string;
 }

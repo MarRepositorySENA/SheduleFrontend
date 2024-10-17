@@ -4,12 +4,10 @@ export interface CompetenciasProgramasFormacion {
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string | null;
-  programaFormacionId: {                           // Relación con ProgramaFormacion
+  programaFormacionId: {                                // Relación con Modalidad
     id: number;
-    nombre: string;
   };
-  competenciaId: {                                 // Relación con Competencia
+  competenciaId:  {                                // Relación con Modalidad
     id: number;
-    nombre: string;
   };
 }
