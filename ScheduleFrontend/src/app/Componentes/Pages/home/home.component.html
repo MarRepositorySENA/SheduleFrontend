@@ -20,22 +20,26 @@
           <div class="col-md-4 mb-4">
               <div class="feature-card shadow-sm p-4 rounded bg-white text-center">
                   <i class="fas fa-calendar-alt fa-3x mb-3" style="color: #004455;"></i>
-                  <h5 class="card-title">Gestión de Horarios</h5>
-                  <p class="card-text">Administra y organiza horarios de manera eficiente.</p>
+                  <h5 class="card-title">Gestión de ambientes</h5>
+                  <p class="card-text">Calendario de ambientes.</p>
+                  <a href="calendario_ambiente"></a>
               </div>
           </div>
           <div class="col-md-4 mb-4">
               <div class="feature-card shadow-sm p-4 rounded bg-white text-center">
                   <i class="fas fa-users fa-3x mb-3" style="color: #004455;"></i>
                   <h5 class="card-title">Instructores</h5>
-                  <p class="card-text">Visualiza y gestiona la disponibilidad de los instructores.</p>
-              </div>
+                  <p class="card-text">calendario de instructores.</p>
+                  <a href="calendario_horario_instructor"></a>
+                </div>
           </div>
           <div class="col-md-4 mb-4">
               <div class="feature-card shadow-sm p-4 rounded bg-white text-center">
                   <i class="fas fa-bell fa-3x mb-3" style="color: #004455;"></i>
-                  <h5 class="card-title">Notificaciones</h5>
-                  <p class="card-text">Recibe actualizaciones y alertas importantes.</p>
+                  <h5 class="card-title">Calendario General</h5>
+                  <p class="card-text">Visualiza los Ambientes e instructores cargados/p>
+                  <a href=""></a>
+
               </div>
           </div>
       </div>
@@ -45,10 +49,10 @@
   <h3 class="mb-4">Panel de Control Rápido</h3>
   <div class="row">
       <div class="col-md-3 mb-3">
-          <a href="#" class="btn custom-btn btn-lg w-100">Asignar Horario</a>
+          <a href="calendario_ambiente" class="btn custom-btn btn-lg w-100">Asignar Horario</a>
       </div>
       <div class="col-md-3 mb-3">
-          <a href="#" class="btn custom-btn btn-lg w-100">Ver Instructores</a>
+          <a href="calendario_horario_instructor" class="btn custom-btn btn-lg w-100">Ver Instructores</a>
       </div>
       <div class="col-md-3 mb-3">
           <a href="#" class="btn custom-btn btn-lg w-100">Ver Horarios</a>
@@ -69,14 +73,14 @@
               <div class="update-card shadow-sm p-3 rounded bg-white w-100">
                   <h6 class="update-title">Actualización de Sistema</h6>
                   <p class="update-text">Detalles sobre las nuevas características y mejoras del sistema.</p>
-                  <a href="#" class="btn btn-outline-primary">Leer Más</a>
+                  <a href="" class="btn btn-outline-primary">Leer Más</a>
               </div>
           </div>
           <div class="col-md-4 mb-4 d-flex align-items-stretch">
               <div class="update-card shadow-sm p-3 rounded bg-white w-100">
                   <h6 class="update-title">Nuevo Instructor</h6>
                   <p class="update-text">Información sobre el nuevo miembro del equipo.</p>
-                  <a href="#" class="btn btn-outline-primary">Leer Más</a>
+                  <a [routerLink]="['/registro_empleado']" class="btn btn-primary">Ir a Instructores</a>
               </div>
           </div>
           <div class="col-md-4 mb-4 d-flex align-items-stretch">

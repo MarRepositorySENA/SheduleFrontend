@@ -12,6 +12,7 @@ import { JornadaComponent } from '../../../Componentes/Operacional/GestionHorari
 import { MatriculaComponent } from '../../../Componentes/Operacional/GestionHorario/matricula/matricula.component';
 import { ProgramacionFichaComponent } from '../../../Componentes/Operacional/GestionHorario/programacion-ficha/programacion-ficha.component';
 import { FullCalendarModule } from '@fullcalendar/angular';
+import { CalendarioAmbientesComponent } from '../../../Componentes/Operacional/GestionHorario/calendario-ambientes/calendario-ambientes.component';
 
 
 
@@ -23,6 +24,8 @@ import { FullCalendarModule } from '@fullcalendar/angular';
     JornadaComponent,
     MatriculaComponent,
     ProgramacionFichaComponent,
+    CalendarioAmbientesComponent
+
     
 
 

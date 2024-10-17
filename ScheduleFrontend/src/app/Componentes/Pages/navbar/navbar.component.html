@@ -1,30 +1,42 @@
-  <nav class="navbar">
-      <ul class="menu">
-        <li class="nav-item" tooltip="Inicio" placement="right">
-          <a href="/home">
-            <i class="fas fa-home"></i>
-          </a>
-        </li>
-        <li class="nav-item" tooltip="Acerca de" placement="right">
-          <a href="/about">
-            <i class="fas fa-info-circle"></i>
-          </a>
-        </li>
-        <li class="nav-item" tooltip="Contactos" placement="right">
-          <a href="/contact">
-            <i class="fas fa-address-book"></i>
-          </a>
-        </li>
-        <li class="nav-item" tooltip="Salir" placement="right">
-          <a href="/configuracion">
-            <i class="fas fa-cog"></i>
-          </a>
-        </li>
-        <div class="navbar-brand">
-          <span class="project-name">Schedule</span>
-        </div>
-      </ul>
-    </nav>
-  
-  
-  
+<nav class="navbar">
+  <ul class="menu">
+    <!-- Botón de Inicio -->
+    <li class="nav-item" tooltip="Inicio" placement="right">
+      <a routerLink="/dashboard">
+        <i class="fas fa-home"></i>
+      </a>
+    </li>
+
+    <!-- Botón de Acerca de -->
+    <li class="nav-item" tooltip="Acerca de" placement="right">
+      <a routerLink="/informacion/about">
+        <i class="fas fa-info-circle"></i>
+      </a>
+    </li>
+
+    <!-- Botón de Contactos -->
+    <li class="nav-item" tooltip="Contactos" placement="right">
+      <a routerLink="/informacion/contact">
+        <i class="fas fa-address-book"></i>
+      </a>
+    </li>
+    <!-- Botón de actualizar datos del usuario -->
+    <li class="nav-item" tooltip="Actualizar Datos" placement="right">
+      <a routerLink="/actualizar-datos">
+        <i class="fas fa-user-edit"></i>
+      </a>
+    </li>
+
+    <!-- Botón de Cerrar Sesión -->
+    <li class="nav-item" tooltip="Salir" placement="right" (click)="cerrarSesion()">
+      <a>
+        <i class="fas fa-sign-out-alt"></i> <!-- Cambié el ícono por uno más intuitivo -->
+      </a>
+    </li>
+
+    <!-- Título del Proyecto -->
+    <div class="navbar-brand">
+      <span class="project-name">Schedule</span>
+    </div>
+  </ul>
+</nav>

@@ -3,20 +3,20 @@ import { FullCalendarComponent } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { HorariosEmpleadosService } from '../../../../Services/S-Operacional/GestionPersonal/HorariosEmpleados.service';
-import { HorariosEmpleados } from '../../../../models/M-Operacional/GestionPersonal/horarios-empleados';
+import { HorariosAmbientesService } from '../../../../Services/S-Operacional/GestionHorario/horarios-ambientes.service';
+import { HorariosAmbientes } from '../../../../models/M-Operacional/GestionHorario/horarios-ambientes';
 
 @Component({
-  selector: 'app-calendario-empleados',
-  templateUrl: './calendario-empleados.component.html',
-  styleUrls: ['./calendario-empleados.component.css']
+  selector: 'app-calendario-ambientes',
+  templateUrl: './calendario-ambientes.component.html',
+  styleUrls: ['./calendario-ambientes.component.css']
 })
-export class CalendarioEmpleadosComponent implements OnInit {
+export class CalendarioAmbientesComponent implements OnInit {
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
   calendarOptions: any;
   events: any[] = [];
 
-  constructor(private horariosEmpleadosService: HorariosEmpleadosService) {}
+  constructor(private horariosAmbientesService: HorariosAmbientesService) {}
 
   ngOnInit() {
     this.loadHorarios();
@@ -36,18 +36,16 @@ export class CalendarioEmpleadosComponent implements OnInit {
     };
   }
 
-  
-
   loadHorarios() {
-    this.horariosEmpleadosService.getHorariosEmpleadosSinEliminar().subscribe((data: HorariosEmpleados[]) => {
+    this.horariosAmbientesService.getHorariosAmbientesSinEliminar().subscribe((data: HorariosAmbientes[]) => {
       this.events = data.map(horario => ({
-        title: `${horario.empleadoId.personaId.primerNombre} ${horario.empleadoId.personaId.primerApellido}`,
+        title: `Ambiente: ${horario.ambienteId.nombre}`,
         start: horario.horaInicio,
         end: horario.horaFin
       }));
-      
+
       // Actualizamos los eventos del calendario
       this.calendarOptions.events = this.events;
     });
   }
-}  
+}

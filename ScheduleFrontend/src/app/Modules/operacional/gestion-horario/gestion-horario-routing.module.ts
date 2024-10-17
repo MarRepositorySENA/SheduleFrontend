@@ -6,6 +6,7 @@ import { HorariosAmbientesComponent } from '../../../Componentes/Operacional/Ges
 import { JornadaComponent } from '../../../Componentes/Operacional/GestionHorario/jornada/jornada.component';
 import { MatriculaComponent } from '../../../Componentes/Operacional/GestionHorario/matricula/matricula.component';
 import { ProgramacionFichaComponent } from '../../../Componentes/Operacional/GestionHorario/programacion-ficha/programacion-ficha.component';
+import { CalendarioAmbientesComponent } from '../../../Componentes/Operacional/GestionHorario/calendario-ambientes/calendario-ambientes.component';
 
 const routes: Routes = [
   { path: 'registro_convocatoria', component: ConvocatoriaComponent },  
@@ -13,7 +14,9 @@ const routes: Routes = [
   { path: 'registro_horarios_ambientes', component: HorariosAmbientesComponent },  
   { path: 'registro_jornada', component: JornadaComponent },  
   { path: 'registro_matricula', component: MatriculaComponent },  
-  { path: 'registro_programacion_ficha', component: ProgramacionFichaComponent },  
+  { path: 'registro_programacion_ficha', component: ProgramacionFichaComponent },
+  { path: 'calendario_ambiente', component: CalendarioAmbientesComponent },  
+
 
 
 

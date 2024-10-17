@@ -14,7 +14,7 @@ const routes: Routes = [
   { path: 'registro_funciones', component: FuncionesComponent },
   { path: 'registro_horarios_empleados', component: CargoComponent },
   { path: 'registro_tipo_contrato', component: TipoContratoComponent },
-  { path: 'calendario_horarios', component: CalendarioEmpleadosComponent },
+  { path: 'calendario_horario_instructor', component: CalendarioEmpleadosComponent },
 
 
 

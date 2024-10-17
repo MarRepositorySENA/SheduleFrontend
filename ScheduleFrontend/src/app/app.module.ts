@@ -11,6 +11,7 @@ import { SharedModule } from './Modules/shared/shared.module';
 import { InformacionModule } from './Modules/informacion/informacion.module';
 import { LoginComponent } from './Componentes/Pages/Auth/login/login.component';
 import { AuthModule } from './Modules/auth/auth.module';
+import { DashboardModule } from './Modules/dashboard/dashboard.module';
 
 
 @NgModule({
@@ -27,6 +28,8 @@ import { AuthModule } from './Modules/auth/auth.module';
     FontAwesomeModule,       // Importado de manera global para usar íconos
    SharedModule,      // Importar SharedModule para usar NavbarComponent y MenuComponent globalmente
   InformacionModule,
+  DashboardModule, 
+  
   
   ],
   providers: [

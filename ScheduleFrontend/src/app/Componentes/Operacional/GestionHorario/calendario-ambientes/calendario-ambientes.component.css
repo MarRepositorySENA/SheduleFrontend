@@ -1,0 +1,41 @@
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    color: #004455;
+    font-size: 1.75rem;
+    margin-bottom: 20px;
+  }
+  
+  .fc-toolbar {
+    background-color: #004455;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  
+  .fc-button {
+    background-color: #39A900 !important;
+    border: none !important;
+    color: white !important;
+  }
+  
+  .fc-button:hover {
+    background-color: #33A000 !important;
+  }
+  
+  .fc-event {
+    background-color: #4CAF50 !important;
+    border: none !important;
+  }
+  
+  .fc-today {
+    background-color: #ffeb3b !important;
+  }
+  

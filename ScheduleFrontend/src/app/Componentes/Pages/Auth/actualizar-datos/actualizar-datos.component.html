@@ -1,0 +1,163 @@
+<!-- <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow-lg">
+          <div class="card-header text-center bg-primary text-white">
+            <h2>Actualizar Datos</h2>
+          </div>
+  
+          <div class="card-body">
+            <div class="profile-image-container text-center">
+              <label for="fotoPerfil">
+                <img
+                  [src]="fotoPrevia || 'assets/user-icon.png'"
+                  alt="Foto de Perfil"
+                  class="profile-image img-thumbnail rounded-circle"
+                />
+                <input
+                  type="file"
+                  id="fotoPerfil"
+                  (change)="onFileSelected($event)"
+                  accept="image/*"
+                  hidden
+                />
+              </label>
+            </div>
+  
+            <form [formGroup]="actualizarForm" (ngSubmit)="onSubmit()" novalidate>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="primerNombre">Primer Nombre</label>
+                    <input
+                      id="primerNombre"
+                      formControlName="primerNombre"
+                      type="text"
+                      class="form-control"
+                      [ngClass]="{ 'is-invalid': isInvalid('primerNombre') }"
+                    />
+                    <div class="invalid-feedback">
+                      El primer nombre es obligatorio.
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="segundoNombre">Segundo Nombre</label>
+                    <input id="segundoNombre" formControlName="segundoNombre" type="text" class="form-control" />
+                  </div>
+                </div>
+  
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="primerApellido">Primer Apellido</label>
+                    <input
+                      id="primerApellido"
+                      formControlName="primerApellido"
+                      type="text"
+                      class="form-control"
+                      [ngClass]="{ 'is-invalid': isInvalid('primerApellido') }"
+                    />
+                    <div class="invalid-feedback">
+                      El primer apellido es obligatorio.
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="segundoApellido">Segundo Apellido</label>
+                    <input id="segundoApellido" formControlName="segundoApellido" type="text" class="form-control" />
+                  </div>
+                </div>
+  
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="tipoDocumento">Tipo de Documento</label>
+                    <select
+                      id="tipoDocumento"
+                      formControlName="tipoDocumento"
+                      class="form-control"
+                    >
+                      <option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{ tipo }}</option>
+                    </select>
+                  </div>
+                </div>
+  
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="numeroDocumento">Número de Documento</label>
+                    <input
+                      id="numeroDocumento"
+                      formControlName="numeroDocumento"
+                      type="number"
+                      class="form-control"
+                      min="0"
+                    />
+                  </div>
+                </div>
+  
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="email">Correo Electrónico</label>
+                    <input
+                      id="email"
+                      formControlName="email"
+                      type="email"
+                      class="form-control"
+                      [ngClass]="{ 'is-invalid': isInvalid('email') }"
+                    />
+                    <div class="invalid-feedback">
+                      Introduce un correo electrónico válido.
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="genero">Género</label>
+                    <select id="genero" formControlName="genero" class="form-control">
+                      <option>Masculino</option>
+                      <option>Femenino</option>
+                      <option>Otro</option>
+                    </select>
+                  </div>
+                </div>
+  
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                    <input
+                      id="fechaNacimiento"
+                      formControlName="fechaNacimiento"
+                      type="date"
+                      class="form-control"
+                      [ngClass]="{ 'is-invalid': isInvalid('fechaNacimiento') }"
+                    />
+                    <div class="invalid-feedback">
+                      La fecha no es válida. Debe ser mayor de 14 años y menor de 85.
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="direccion">Dirección</label>
+                    <input id="direccion" formControlName="direccion" type="text" class="form-control" />
+                  </div>
+                </div>
+  
+                <div class="col-md-12 text-center mt-3">
+                  <button type="submit" class="btn btn-success btn-lg w-50" [disabled]="actualizarForm.invalid">
+                    Guardar Cambios
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+   -->

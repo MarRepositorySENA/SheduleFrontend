@@ -77,7 +77,8 @@ export class MenuComponent implements OnInit {
                 { nombre: 'Jornadas', ruta: 'operacional/gestion_horario/registro_jornada' },
                 { nombre: 'Matrícula', ruta: 'operacional/gestion_horario/registro_matricula' },
                 { nombre: 'Programación Fichas', ruta: 'operacional/gestion_horario/registro_programacion_ficha' },
-                { nombre: 'Calendario General de Horarios', ruta: 'operacional/calendario_horarios_general' }
+                { nombre: 'Calendario General de Horarios', ruta: 'operacional/calendario_horarios_general' },
+                { nombre: 'Calendario Ambientes', ruta: 'operacional/gestion_horario/calendario_ambiente' },
               ]
             },
             {
@@ -89,7 +90,8 @@ export class MenuComponent implements OnInit {
                 { nombre: 'Fichas Empleados', ruta: 'operacional/gestion_personal/registro_fichas_empleados' },
                 { nombre: 'Funciones', ruta: 'operacional/gestion_personal/registro_funciones' },
                 { nombre: 'Horarios Empleados', ruta: 'operacional/gestion_personal/registro_horarios_empleados' },
-                { nombre: 'Tipo Contrato', ruta: 'operacional/gestion_personal/registro_tipo_contrato' }
+                { nombre: 'Tipo Contrato', ruta: 'operacional/gestion_personal/registro_tipo_contrato' },
+                { nombre: 'Calendario Instructores', ruta: 'operacional/gestion_personal/calendario_horario_instructor' },
               ]
             },
             {

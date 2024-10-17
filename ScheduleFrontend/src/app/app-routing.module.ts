@@ -2,48 +2,50 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from './Componentes/Pages/layout/layout.component';
 import { AuthGuard } from './Services/Jwt/AuthGuard';
-import { RecuperarContraseniaComponent } from "./Componentes/Pages/Auth/recuperar-contrasenia/recuperar-contrasenia.component";
-import { ActualizarContraseniaComponent } from "./Componentes/Pages/Auth/actualizar-contrasenia/actualizar-contrasenia.component";
 
 const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'auth', // Redirige a la autenticación por defecto
-    pathMatch: 'full'
-  },
+  { path: '', redirectTo: 'auth', pathMatch: 'full' },
   {
     path: 'auth',
-    loadChildren: () => import('./Modules/auth/auth.module').then(m => m.AuthModule) // Ruta para el módulo de autenticación (login)
+    loadChildren: () => import('./Modules/auth/auth.module').then(m => m.AuthModule)
   },
   {
     path: '',
-    component: LayoutComponent, // Carga el LayoutComponent después del login exitoso
-    canActivate: [AuthGuard],    // Protege las rutas con AuthGuard para verificar la autenticación
+    component: LayoutComponent, // El LayoutComponent asegura que el menú y navbar sean visibles
+    canActivate: [AuthGuard],  // Verifica autenticación con AuthGuard
     children: [
       {
         path: 'dashboard',
-        loadChildren: () => import('./Modules/dashboard/dashboard.module').then(m => m.DashboardModule) // Ruta para el módulo de dashboard
+        loadChildren: () => import('./Modules/dashboard/dashboard.module').then(m => m.DashboardModule)
+      },
+      {
+        path: 'informacion',
+        loadChildren: () => import('./Modules/informacion/informacion.module').then(m => m.InformacionModule)
       },
       {
         path: 'parametrizacion',
-        loadChildren: () => import('./Modules/parametrizacion/parametrizacion.module').then(m => m.ParametrizacionModule) // Ruta para parametrización
+        loadChildren: () => import('./Modules/parametrizacion/parametrizacion.module').then(m => m.ParametrizacionModule)
       },
       {
         path: 'seguridad',
-        loadChildren: () => import('./Modules/seguridad/seguridad.module').then(m => m.SeguridadModule) // Ruta para seguridad
+        loadChildren: () => import('./Modules/seguridad/seguridad.module').then(m => m.SeguridadModule)
       },
       {
         path: 'operacional',
-        loadChildren: () => import('./Modules/operacional/operacional.module').then(m => m.OperacionalModule) // Ruta para operacional
+        loadChildren: () => import('./Modules/operacional/operacional.module').then(m => m.OperacionalModule)
+      },
+      {
+        path: 'actualizar-datos',  // Nueva ruta para Actualizar Datos
+        loadChildren: () =>
+          import('./Modules/actualizar-datos/actualizar-datos.module').then(m => m.ActualizarDatosModule)
       }
     ]
-  }
-
-  // Agregar más rutas según sea necesario
+  },
+  { path: '**', redirectTo: 'auth' }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
