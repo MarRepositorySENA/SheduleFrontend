@@ -2,12 +2,7 @@ package com.persona.Backend.Entity.Operational.GestionFormativa;
 
 import com.persona.Backend.Entity.BaseEntity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name="programa_formacion")
@@ -22,15 +17,15 @@ public class ProgramaFormacion extends BaseEntity{
 	@Column(name = "duraccion", length = 45, nullable = false)
 	private Integer duraccion;
 	
-	@OneToOne(fetch = FetchType.EAGER, optional = false)
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "modalidad_id", nullable = false, unique = false)
 	private Modalidad modalidadId;
 	
-	@OneToOne(fetch = FetchType.EAGER, optional = false)
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "nivel_formacion_id", nullable = false, unique = false)
 	private NivelFormacion nivelFormacionId;
 	
-	@OneToOne(fetch = FetchType.EAGER, optional = false)
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "tipo_formacion_id", nullable = false, unique = false)
 	private TipoFormacion tipoFormacionId;
 

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { Rap } from '../../../../models/M-Operacional/GestionFormativa/rap';
 import { RapService } from '../../../../Services/S-Operacional/GestionFormativa/Rap.service';
+import {ProgramaFormacion} from "../../../../models/M-Operacional/GestionFormativa/programa-formacion";
 
 @Component({
   selector: 'app-rap',
@@ -38,9 +39,7 @@ export class RapComponent implements OnInit {
       descripcion: ['', Validators.required],
       duraccion: [0, [Validators.required, Validators.min(1)]],
       nivel: ['', Validators.required],
-      state: [true, Validators.required],
-      createdAt: [''],
-      updatedAt: ['']
+      state: [true, Validators.required]
     });
   }
 
@@ -56,19 +55,32 @@ export class RapComponent implements OnInit {
   }
 
   onSubmit(): void {
+    // Verifica si el formulario es válido
     if (this.rapForm.invalid) {
       Swal.fire('Error', 'Por favor complete todos los campos obligatorios.', 'error');
       return;
     }
 
-    const rap: Rap = this.rapForm.value;
+    // Obtén los valores del formulario
+    const formValue = this.rapForm.value;
 
+    // Construye el objeto 'Rap'
+    const rap: Rap = {
+      id: 0,
+      duraccion: formValue.duraccion,
+      descripcion: formValue.descripcion,
+      nivel:  formValue.descripcion, // Aquí construyes el objeto como en el otro formulario
+      state: formValue.state // El estado es un campo booleano o como sea necesario en tu modelo
+    };
+
+    // Aquí puedes manejar si estás creando o editando
     if (this.isEditing) {
       this.updateRap(rap);
     } else {
       this.createRap(rap);
     }
   }
+
 
   createRap(rap: Rap): void {
     rap.createdAt = new Date().toISOString();

@@ -9,7 +9,7 @@ import { Competencia } from '../../../models/M-Operacional/GestionFormativa/comp
 })
 export class CompetenciaService {
   private apiUrl = 'http://localhost:9000/base/api/v1/base/operational/gestion_formativa/competencia';
-  private apiCargaMasivaUrl = 'http://localhost:9000/base/api/gestion_formativa/carga_masiva/competencias'; 
+  private apiCargaMasivaUrl = 'http://localhost:9000/base/api/gestion_formativa/carga_masiva/competencias';
 
   constructor(private http: HttpClient) {}
 

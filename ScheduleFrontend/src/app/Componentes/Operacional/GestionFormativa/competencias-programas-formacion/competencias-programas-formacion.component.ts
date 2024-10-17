@@ -44,11 +44,9 @@ export class CompetenciasProgramasFormacionComponent implements OnInit {
   initializeForm(): void {
     this.competenciasProgramasFormacionForm = this.fb.group({
       id: [0],
-      programaFormacionId: [null, Validators.required],
-      competenciaId: [null, Validators.required],
-      state: [true, Validators.required],
-      createdAt: [''],
-      updatedAt: ['']
+      programaFormacionId:  [0, Validators.required],
+      competenciaId:  [0, Validators.required],
+      state: [true, Validators.required]
     });
   }
 
@@ -91,7 +89,15 @@ export class CompetenciasProgramasFormacionComponent implements OnInit {
       return;
     }
 
-    const competenciasProgramasFormacion: CompetenciasProgramasFormacion = this.competenciasProgramasFormacionForm.value;
+    const formValue = this.competenciasProgramasFormacionForm.value;
+
+    const competenciasProgramasFormacion: CompetenciasProgramasFormacion = {
+      id: 0,
+      // Aquí es donde construyes el objeto
+      programaFormacionId: { id: formValue.programaFormacionId }, // Aquí lo haces también
+      competenciaId: { id: formValue.competenciaId }, // Aquí lo haces también
+      state: formValue.state // Puedes establecer el estado desde el formulario
+    };
 
     if (this.isEditing) {
       this.updateCompetenciasProgramasFormacion(competenciasProgramasFormacion);

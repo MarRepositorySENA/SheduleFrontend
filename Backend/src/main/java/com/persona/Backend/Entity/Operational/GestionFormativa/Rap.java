@@ -18,7 +18,7 @@ public class Rap extends BaseEntity {
 	private Integer duraccion;
 
 	@Column(name = "nivel", length = 45, nullable = false)
-	private NivelRap nivel;
+	private String nivel;
 
 	public String getDescripcion() {
 		return descripcion;
@@ -36,12 +36,11 @@ public class Rap extends BaseEntity {
 		this.duraccion = duraccion;
 	}
 
-	public NivelRap getNivel() {
+	public String getNivel() {
 		return nivel;
 	}
 
-	public void setNivel(NivelRap nivel) {
+	public void setNivel(String nivel) {
 		this.nivel = nivel;
 	}
-
 }
