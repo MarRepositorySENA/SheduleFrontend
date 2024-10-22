@@ -1,60 +1,111 @@
 <div class="form-carga-container">
-    <!-- Formulario para Crear/Editar Modalidad -->
-    <div class="form-container">
-      <h2 class="text-center mb-4">{{ isEditing ? 'Editar Modalidad' : 'Registrar Modalidad' }}</h2>
-  
-      <form [formGroup]="modalidadForm" (ngSubmit)="onSubmit()">
-        <div class="mb-3">
-          <label for="codigo" class="form-label">Código:</label>
-          <input type="text" id="codigo" class="form-control" formControlName="codigo">
+  <!-- Formulario para Crear/Editar Modalidad -->
+  <div class="form-container">
+    <h2 class="text-center mb-4">{{ isEditing ? 'Editar Modalidad' : 'Registrar Modalidad' }}</h2>
+
+    <form [formGroup]="modalidadForm" (ngSubmit)="onSubmit()">
+      <!-- Campo Código -->
+      <div class="mb-3">
+        <label for="codigo" class="form-label">
+          <span class="required-asterisk">*</span> Código:
+        </label>
+        <input 
+          type="text" 
+          id="codigo" 
+          class="form-control" 
+          formControlName="codigo">
+        <div *ngIf="modalidadForm.get('codigo')?.invalid && modalidadForm.get('codigo')?.touched" class="text-danger">
+          <small *ngIf="modalidadForm.get('codigo')?.errors?.['required']">El código es requerido.</small>
+          <small *ngIf="modalidadForm.get('codigo')?.errors?.['minlength']">Mínimo 3 caracteres.</small>
+          <small *ngIf="modalidadForm.get('codigo')?.errors?.['pattern']">Solo letras y números permitidos.</small>
         </div>
-  
-        <div class="mb-3">
-          <label for="nombre" class="form-label">Nombre:</label>
-          <input type="text" id="nombre" class="form-control" formControlName="nombre">
+      </div>
+
+      <!-- Campo Nombre -->
+      <div class="mb-3">
+        <label for="nombre" class="form-label">
+          <span class="required-asterisk">*</span> Nombre:
+        </label>
+        <input 
+          type="text" 
+          id="nombre" 
+          class="form-control" 
+          formControlName="nombre" 
+          (keypress)="validateName($event)">
+        <div *ngIf="modalidadForm.get('nombre')?.invalid && modalidadForm.get('nombre')?.touched" class="text-danger">
+          <small *ngIf="modalidadForm.get('nombre')?.errors?.['required']">El nombre es requerido.</small>
+          <small *ngIf="modalidadForm.get('nombre')?.errors?.['minlength']">Mínimo 5 caracteres.</small>
         </div>
-  
-        <div class="mb-3">
-          <label for="descripcion" class="form-label">Descripción:</label>
-          <textarea id="descripcion" class="form-control" formControlName="descripcion"></textarea>
+      </div>
+
+      <!-- Campo Descripción (Opcional) -->
+      <div class="mb-3">
+        <label for="descripcion" class="form-label">Descripción (Opcional):</label>
+        <textarea 
+          id="descripcion" 
+          class="form-control" 
+          formControlName="descripcion"></textarea>
+        <div *ngIf="modalidadForm.get('descripcion')?.invalid && modalidadForm.get('descripcion')?.touched" class="text-danger">
+          <small *ngIf="modalidadForm.get('descripcion')?.errors?.['minlength']">Mínimo 10 caracteres.</small>
         </div>
-  
-        <div class="mb-3">
-          <label for="requierePresencialidad" class="form-label">Requiere Presencialidad:</label>
-          <div class="form-check form-switch">
-            <input type="checkbox" class="form-check-input" id="requierePresencialidad" formControlName="requierePresencialidad">
-            <label class="form-check-label" for="requierePresencialidad">{{ modalidadForm.get('requierePresencialidad')?.value ? 'Sí' : 'No' }}</label>
-          </div>
+      </div>
+
+      <!-- Campo Requiere Presencialidad -->
+      <div class="mb-3">
+        <label for="requierePresencialidad" class="form-label">
+          <span class="required-asterisk">*</span> Requiere Presencialidad:
+        </label>
+        <div class="form-check form-switch">
+          <input 
+            type="checkbox" 
+            class="form-check-input" 
+            id="requierePresencialidad" 
+            formControlName="requierePresencialidad">
+          <label class="form-check-label" for="requierePresencialidad">
+            {{ modalidadForm.get('requierePresencialidad')?.value ? 'Sí' : 'No' }}
+          </label>
         </div>
-  
-        <!-- Mostrar estado solo si estamos editando -->
-        <div *ngIf="isEditing" class="mb-3">
-          <label for="estado" class="form-label">Estado:</label>
-          <div class="form-check form-switch">
-            <input type="checkbox" class="form-check-input" id="state" formControlName="state">
-            <label class="form-check-label" for="state">{{ modalidadForm.get('state')?.value ? 'Activo' : 'Inactivo' }}</label>
-          </div>
+      </div>
+
+      <!-- Estado (solo en modo edición) -->
+      <div *ngIf="isEditing" class="mb-3">
+        <label for="state" class="form-label">Estado:</label>
+        <div class="form-check form-switch">
+          <input 
+            type="checkbox" 
+            class="form-check-input" 
+            id="state" 
+            formControlName="state">
+          <label class="form-check-label" for="state">
+            {{ modalidadForm.get('state')?.value ? 'Activo' : 'Inactivo' }}
+          </label>
         </div>
-  
-        <div class="modal-footer d-flex justify-content-center">
-          <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
-        </div>
-      </form>
-    </div>
-  
-    <!-- Sección de carga masiva al lado del formulario -->
-    <div class="carga-masiva-container">
-      <h3>Carga Masiva</h3>
-      <input type="file" (change)="onFileSelected($event)" class="form-control">
-      <button class="btn btn-success mt-3" (click)="uploadExcel()">Subir Excel</button>
-    </div>
+      </div>
+
+      <!-- Botón de Acción -->
+      <div class="modal-footer d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary" [disabled]="modalidadForm.invalid">
+          {{ isEditing ? 'Actualizar' : 'Guardar' }}
+        </button>
+      </div>
+    </form>
   </div>
-  
-  <!-- Tabla dinámica para mostrar las modalidades -->
-  <div class="table-container mt-5">
-    <h2 class="text-center mb-4">Lista de Modalidades</h2>
-    <div class="table-responsive">
-      <app-table [headers]="headers" [data]="modalidades" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-table>
-    </div>
+
+  <!-- Carga Masiva -->
+  <div class="carga-masiva-container">
+    <h3>Carga Masiva</h3>
+    <input type="file" (change)="onFileSelected($event)" class="form-control">
+    <button class="btn btn-success mt-3" (click)="uploadExcel()">Subir Excel</button>
   </div>
-  
+</div>
+
+<!-- Tabla para mostrar las modalidades -->
+<div class="table-container mt-5">
+  <h2 class="text-center mb-4">Lista de Modalidades</h2>
+  <div class="table-responsive">
+    <app-table [headers]="headers" [data]="modalidades" 
+               (edit)="onEdit($event)" 
+               (delete)="onDelete($event)">
+    </app-table>
+  </div>
+</div>

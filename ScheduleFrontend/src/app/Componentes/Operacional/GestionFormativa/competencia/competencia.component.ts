@@ -13,7 +13,7 @@ import { CompetenciaService } from '../../../../Services/S-Operacional/GestionFo
 export class CompetenciaComponent implements OnInit {
   competencias: Competencia[] = [];
   competenciaForm!: FormGroup;
-  selectedFile!: File; // Para la carga masiva
+  selectedFile!: File;
   isEditing: boolean = false;
   headers = [
     { title: 'Código', field: 'codigo' },
@@ -36,38 +36,56 @@ export class CompetenciaComponent implements OnInit {
   initializeForm(): void {
     this.competenciaForm = this.fb.group({
       id: [0],
-      codigo: ['', [Validators.required, Validators.minLength(3)]],
-      nombre: ['', Validators.required],
+      codigo: [
+        '', 
+        [Validators.required, Validators.minLength(3), Validators.pattern(/^[A-Za-z0-9]+$/)] // Solo letras y números
+      ],
+      nombre: [
+        '', 
+        [Validators.required, Validators.minLength(5), Validators.pattern(/^[A-Za-z\s]+$/)] // Solo letras y espacios
+      ],
       descripcion: ['', [Validators.required, Validators.minLength(10)]],
-      duraccion: [0, [Validators.required, Validators.min(1)]], // Duración mínima de 1 hora
+      duraccion: [
+        null, 
+        [Validators.required, Validators.min(40), Validators.max(300), Validators.pattern(/^[0-9]+$/)] // Solo números positivos
+      ],
       state: [true, Validators.required]
     });
   }
 
+  // Validar que solo se ingresen letras y espacios en el campo de nombre
+  validateName(event: KeyboardEvent): void {
+    const pattern = /^[a-zA-Z\s]*$/; // Permitir solo letras y espacios
+    const inputChar = String.fromCharCode(event.keyCode);
+
+    if (!pattern.test(inputChar)) {
+      event.preventDefault(); // Bloquear entrada si no coincide con el patrón
+    }
+  }
+  
+  // Getters para los campos
+  get codigo() { return this.competenciaForm.get('codigo'); }
+  get nombre() { return this.competenciaForm.get('nombre'); }
+  get descripcion() { return this.competenciaForm.get('descripcion'); }
+  get duraccion() { return this.competenciaForm.get('duraccion'); }
+  
+
   getCompetencias(): void {
     this.competenciaService.getCompetenciasSinEliminar().subscribe(
-      data => {
-        this.competencias = data;
-      },
-      error => {
-        console.error('Error al obtener las competencias:', error);
-      }
+      data => this.competencias = data,
+      error => console.error('Error al obtener las competencias:', error)
     );
   }
 
   onSubmit(): void {
     if (this.competenciaForm.invalid) {
-      Swal.fire('Error', 'Por favor complete todos los campos obligatorios.', 'error');
+      Swal.fire('Error', 'Por favor complete todos los campos correctamente.', 'error');
       return;
     }
 
     const competencia: Competencia = this.competenciaForm.value;
 
-    if (this.isEditing) {
-      this.updateCompetencia(competencia);
-    } else {
-      this.createCompetencia(competencia);
-    }
+    this.isEditing ? this.updateCompetencia(competencia) : this.createCompetencia(competencia);
   }
 
   createCompetencia(competencia: Competencia): void {
@@ -80,10 +98,7 @@ export class CompetenciaComponent implements OnInit {
         this.getCompetencias();
         this.resetForm();
       },
-      error => {
-        console.error('Error al crear la competencia:', error);
-        Swal.fire('Error', 'Error al crear la competencia.', 'error');
-      }
+      error => Swal.fire('Error', 'Error al crear la competencia.', 'error')
     );
   }
 
@@ -100,10 +115,7 @@ export class CompetenciaComponent implements OnInit {
         this.resetForm();
         this.isEditing = false;
       },
-      error => {
-        console.error('Error al actualizar la competencia:', error);
-        Swal.fire('Error', 'Error al actualizar la competencia.', 'error');
-      }
+      error => Swal.fire('Error', 'Error al actualizar la competencia.', 'error')
     );
   }
 
@@ -113,7 +125,7 @@ export class CompetenciaComponent implements OnInit {
       codigo: '',
       nombre: '',
       descripcion: '',
-      duraccion: 0,
+      duraccion: null,
       state: true
     });
     this.isEditing = false;
@@ -121,16 +133,7 @@ export class CompetenciaComponent implements OnInit {
 
   onEdit(item: Competencia): void {
     this.isEditing = true;
-    this.competenciaForm.patchValue({
-      id: item.id,
-      codigo: item.codigo,
-      nombre: item.nombre,
-      descripcion: item.descripcion,
-      duraccion: item.duraccion,
-      state: item.state,
-      createdAt: item.createdAt || new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    });
+    this.competenciaForm.patchValue({ ...item });
   }
 
   onDelete(id: number): void {
@@ -142,17 +145,14 @@ export class CompetenciaComponent implements OnInit {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Sí, eliminarla'
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed) {
         this.competenciaService.deleteCompetencia(id).subscribe(
           response => {
             Swal.fire('Eliminado!', 'La competencia ha sido eliminada.', 'success');
             this.getCompetencias();
           },
-          error => {
-            console.error('Error al eliminar la competencia:', error);
-            Swal.fire('Error', 'Error al eliminar la competencia.', 'error');
-          }
+          error => Swal.fire('Error', 'Error al eliminar la competencia.', 'error')
         );
       }
     });
@@ -173,10 +173,7 @@ export class CompetenciaComponent implements OnInit {
         Swal.fire('Éxito', 'Carga masiva completada con éxito.', 'success');
         this.getCompetencias();
       },
-      error => {
-        console.error('Error durante la carga masiva:', error);
-        Swal.fire('Error', error.error.message || 'Error durante la carga masiva.', 'error');
-      }
+      error => Swal.fire('Error', 'Error durante la carga masiva.', 'error')
     );
   }
 }

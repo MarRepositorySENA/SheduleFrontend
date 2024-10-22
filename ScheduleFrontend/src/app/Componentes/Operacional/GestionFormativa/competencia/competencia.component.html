@@ -1,55 +1,93 @@
 <div class="form-carga-container">
-    <!-- Formulario para Crear/Editar Competencia -->
-    <div class="form-container">
-      <h2 class="text-center mb-4">{{ isEditing ? 'Editar Competencia' : 'Registrar Competencia' }}</h2>
+  <!-- Formulario para Crear/Editar Competencia -->
+  <div class="form-container">
+    <h2 class="text-center mb-4">{{ isEditing ? 'Editar Competencia' : 'Registrar Competencia' }}</h2>
 
-      <form [formGroup]="competenciaForm" (ngSubmit)="onSubmit()">
-        <div class="mb-3">
-          <label for="codigo" class="form-label">Código:</label>
-          <input type="text" id="codigo" class="form-control" formControlName="codigo">
+    <form [formGroup]="competenciaForm" (ngSubmit)="onSubmit()">
+      <!-- Campo Código -->
+      <div class="mb-3">
+        <label for="codigo" class="form-label">
+          <span class="required-asterisk">*</span> Código:
+        </label>
+        <input type="text" id="codigo" class="form-control" formControlName="codigo">
+        <div *ngIf="codigo?.invalid && codigo?.touched" class="text-danger">
+          <small *ngIf="codigo?.errors?.['required']">El código es requerido.</small>
+          <small *ngIf="codigo?.errors?.['minlength']">Mínimo 3 caracteres.</small>
+          <small *ngIf="codigo?.errors?.['pattern']">Solo letras y números.</small>
         </div>
+      </div>
 
-        <div class="mb-3">
-          <label for="nombre" class="form-label">Nombre:</label>
-          <input type="text" id="nombre" class="form-control" formControlName="nombre">
+      <!-- Campo Nombre -->
+      <div class="mb-3">
+        <label for="nombre" class="form-label">
+          <span class="required-asterisk">*</span> Nombre:
+        </label>
+        <input type="text" id="nombre" class="form-control" formControlName="nombre" (keypress)="validateName($event)">
+        <div *ngIf="nombre?.invalid && nombre?.touched" class="text-danger">
+          <small *ngIf="nombre?.errors?.['required']">El nombre es requerido.</small>
+          <small *ngIf="nombre?.errors?.['minlength']">Mínimo 5 caracteres.</small>
+          <small *ngIf="nombre?.errors?.['pattern']">Solo letras y espacios permitidos.</small>
         </div>
+      </div>
 
-        <div class="mb-3">
-          <label for="descripcion" class="form-label">Descripción:</label>
-          <textarea id="descripcion" class="form-control" formControlName="descripcion"></textarea>
+      <!-- Campo Descripción -->
+      <div class="mb-3">
+        <label for="descripcion" class="form-label">
+          <span class="required-asterisk">*</span> Descripción:
+        </label>
+        <textarea id="descripcion" class="form-control" formControlName="descripcion"></textarea>
+        <div *ngIf="descripcion?.invalid && descripcion?.touched" class="text-danger">
+          <small *ngIf="descripcion?.errors?.['required']">Descripción requerida.</small>
+          <small *ngIf="descripcion?.errors?.['minlength']">Mínimo 10 caracteres.</small>
         </div>
+      </div>
 
-        <div class="mb-3">
-          <label for="duraccion" class="form-label">Duración (horas):</label>
-          <input type="number" id="duraccion" class="form-control" formControlName="duraccion">
+      <!-- Campo Duración -->
+      <div class="mb-3">
+        <label for="duraccion" class="form-label">
+          <span class="required-asterisk">*</span> Duración (horas):
+        </label>
+        <input type="number" id="duraccion" class="form-control" formControlName="duraccion">
+        <div *ngIf="duraccion?.invalid && duraccion?.touched" class="text-danger">
+          <small *ngIf="duraccion?.errors?.['required']">La duración es requerida.</small>
+          <small *ngIf="duraccion?.errors?.['min']">Debe ser al menos 40 horas.</small>
+          <small *ngIf="duraccion?.errors?.['max']">Máximo 300 horas.</small>
+          <small *ngIf="duraccion?.errors?.['pattern']">Solo números positivos permitidos.</small>
         </div>
+      </div>
 
-        <!-- Mostrar estado solo si estamos editando -->
-        <div *ngIf="isEditing" class="mb-3">
-          <div class="form-check form-switch">
-            <input type="checkbox" class="form-check-input" id="state" formControlName="state">
-            <label class="form-check-label" for="state">{{ competenciaForm.get('state')?.value ? 'Activo' : 'Inactivo' }}</label>
-          </div>
+      <!-- Estado (solo en modo edición) -->
+      <div *ngIf="isEditing" class="mb-3">
+        <div class="form-check form-switch">
+          <input type="checkbox" class="form-check-input" id="state" formControlName="state">
+          <label class="form-check-label" for="state">
+            {{ competenciaForm.get('state')?.value ? 'Activo' : 'Inactivo' }}
+          </label>
         </div>
+      </div>
 
-        <div class="modal-footer d-flex justify-content-center">
-          <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
-        </div>
-      </form>
-    </div>
-
-    <!-- Sección de carga masiva al lado del formulario -->
-    <div class="carga-masiva-container">
-      <h3>Carga Masiva</h3>
-      <input type="file" (change)="onFileSelected($event)" class="form-control">
-      <button class="btn btn-success mt-3" (click)="uploadExcel()">Subir Excel</button>
-    </div>
+      <!-- Botón Guardar / Actualizar -->
+      <div class="modal-footer d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary" [disabled]="competenciaForm.invalid">
+          {{ isEditing ? 'Actualizar' : 'Guardar' }}
+        </button>
+      </div>
+    </form>
   </div>
 
-  <!-- Tabla dinámica para mostrar las competencias -->
-  <div class="table-container mt-5">
-    <h2 class="text-center mb-4">Lista de Competencias</h2>
-    <div class="table-responsive">
-      <app-table [headers]="headers" [data]="competencias" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-table>
-    </div>
+  <!-- Carga Masiva -->
+  <div class="carga-masiva-container">
+    <h3>Carga Masiva</h3>
+    <input type="file" (change)="onFileSelected($event)" class="form-control">
+    <button class="btn btn-success mt-3" (click)="uploadExcel()">Subir Excel</button>
   </div>
+</div>
+
+<!-- Tabla de Competencias -->
+<div class="table-container mt-5">
+  <h2 class="text-center mb-4">Lista de Competencias</h2>
+  <div class="table-responsive">
+    <app-table [headers]="headers" [data]="competencias" (edit)="onEdit($event)" (delete)="onDelete($event)">
+    </app-table>
+  </div>
+</div>

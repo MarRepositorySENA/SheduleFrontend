@@ -12,13 +12,13 @@ import { ModalidadService } from '../../../../Services/S-Operacional/GestionForm
 export class ModalidadComponent implements OnInit {
   modalidades: Modalidad[] = [];
   modalidadForm!: FormGroup;
-  selectedFile!: File; // Para la carga masiva
+  selectedFile!: File;
   isEditing: boolean = false;
   headers = [
     { title: 'Código', field: 'codigo' },
     { title: 'Nombre', field: 'nombre' },
     { title: 'Descripción', field: 'descripcion' },
-    { title: 'Requiere Presencialidad', field: 'requierePresencialidad' },
+    { title: 'Requiere Presencialidad', field: 'requierePresencialidadFormatted' },
     { title: 'Estado', field: 'state' }
   ];
 
@@ -35,9 +35,9 @@ export class ModalidadComponent implements OnInit {
   initializeForm(): void {
     this.modalidadForm = this.fb.group({
       id: [0],
-      codigo: ['', [Validators.required, Validators.minLength(3)]],
-      nombre: ['', Validators.required],
-      descripcion: ['', [Validators.required, Validators.minLength(10)]],
+      codigo: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[A-Za-z0-9]+$/)]],
+      nombre: ['', [Validators.required, Validators.minLength(5), Validators.pattern(/^[A-Za-z\s]+$/)]],
+      descripcion: ['', [Validators.minLength(10)]],  // Opcional, pero con mínimo 10 caracteres si se llena
       requierePresencialidad: [false, Validators.required],
       state: [true, Validators.required],
       createdAt: [''],
@@ -45,30 +45,34 @@ export class ModalidadComponent implements OnInit {
     });
   }
 
+  // Validación del campo 'nombre': solo letras y espacios
+  validateName(event: KeyboardEvent): void {
+    const pattern = /^[a-zA-Z\s]*$/; // Solo letras y espacios
+    const inputChar = String.fromCharCode(event.keyCode);
+    if (!pattern.test(inputChar)) {
+      event.preventDefault(); // Bloquear entrada no válida
+    }
+  }
+
   getModalidades(): void {
     this.modalidadService.getModalidadesSinEliminar().subscribe(
-      data => {
-        this.modalidades = data;
-      },
-      error => {
-        console.error('Error al obtener las modalidades:', error);
-      }
+      data => this.modalidades = data.map(modalidad => ({
+        ...modalidad,
+        requierePresencialidadFormatted: modalidad.requierePresencialidad ? 'Requiere' : 'No Requiere'
+      })),
+      error => console.error('Error al obtener las modalidades:', error)
     );
   }
 
   onSubmit(): void {
     if (this.modalidadForm.invalid) {
-      Swal.fire('Error', 'Por favor complete todos los campos obligatorios.', 'error');
+      Swal.fire('Error', 'Por favor complete todos los campos obligatorios correctamente.', 'error');
       return;
     }
 
     const modalidad: Modalidad = this.modalidadForm.value;
 
-    if (this.isEditing) {
-      this.updateModalidad(modalidad);
-    } else {
-      this.createModalidad(modalidad);
-    }
+    this.isEditing ? this.updateModalidad(modalidad) : this.createModalidad(modalidad);
   }
 
   createModalidad(modalidad: Modalidad): void {
@@ -143,7 +147,7 @@ export class ModalidadComponent implements OnInit {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Sí, eliminarla'
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed) {
         this.modalidadService.deleteModalidad(id).subscribe(
           response => {

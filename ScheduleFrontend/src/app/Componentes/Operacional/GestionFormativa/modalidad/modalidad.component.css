@@ -1,12 +1,12 @@
 /* Contenedor principal que agrupa el formulario y la carga masiva */
 .form-carga-container {
     display: flex;
-    justify-content: center; /* Alinea los elementos al centro */
+    justify-content: center;
     align-items: flex-start;
     gap: 20px;
     margin: 0 auto;
     margin-top: 20px;
-    max-width: 800px; /* Limita el ancho total */
+    max-width: 800px;
 }
 
 /* Estilos para el formulario */
@@ -17,6 +17,27 @@
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Asterisco para campos obligatorios */
+.required-asterisk {
+    color: red;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+/* Bordes dinámicos para validaciones */
+.form-control {
+    border: 2px solid #39A900; /* Verde por defecto */
+    transition: border-color 0.3s ease;
+}
+
+.form-control.ng-touched.ng-invalid {
+    border-color: #ff4d4d; /* Rojo cuando es inválido */
+}
+
+.form-control.ng-touched.ng-valid {
+    border-color: #004455; /* Azul cuando es válido */
 }
 
 /* Estilos para la sección de carga masiva */
@@ -71,6 +92,7 @@
     background-color: #f2f2f2;
 }
 
+/* Botones primarios */
 .btn-primary {
     background-color: #004455;
     border: none;
@@ -80,6 +102,7 @@
     background-color: #39A900;
 }
 
+/* Botones de advertencia y peligro */
 .btn-warning {
     background-color: #ffc107;
 }
