@@ -7,8 +7,6 @@ export interface Usuario {
   contrasenia: string;
   personaId: {                                  // Relación con Persona
     id: number;
-    primerNombre?: string;
-    primerApellido?: string;
   };
   usuarioName: string;
 }

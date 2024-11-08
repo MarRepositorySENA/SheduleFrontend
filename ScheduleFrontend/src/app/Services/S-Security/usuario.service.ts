@@ -11,27 +11,36 @@ export class UsuarioService {
   private apiUrl = 'http://localhost:9000/base/api/v1/base/security/usuario';
   private encodedEmail: any;
 
-
   constructor(private http: HttpClient) {}
 
+  // Crear usuario (POST)
+  createUsuario(usuario: Usuario): Observable<Usuario> {
+    return this.http.post<Usuario>(`${this.apiUrl}/GuardarUsuarioJwt`, usuario);
+  }
+
+  // Obtener todos los usuarios (GET)
   getUsuarios(): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(this.apiUrl);
   }
 
-  getUsuariosSinEliminar(): Observable<Usuario[]> {
-    return this.http.get<Usuario[]>(`${this.apiUrl}/consultarRegistrosSinEliminar`);
+  // Obtener usuario por ID (GET/{id})
+  getUsuarioById(id: number): Observable<Usuario> {
+    return this.http.get<Usuario>(`${this.apiUrl}/${id}`);
   }
 
-  createUsuario(usuario: Usuario): Observable<Usuario> {
-    return this.http.post<Usuario>(this.apiUrl, usuario);
+  // Actualizar usuario (PUT)
+  updateUsuario(id: number, usuario: Usuario): Observable<Usuario> {
+    return this.http.put<Usuario>(`${this.apiUrl}/${id}`, usuario);
   }
 
-  updateUsuario(usuario: Usuario): Observable<Usuario> {
-    return this.http.put<Usuario>(`${this.apiUrl}/${usuario.id}`, usuario);
-  }
-
+  // Eliminar usuario (DELETE)
   deleteUsuario(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  // Consultar registros sin eliminar (GET sin eliminar)
+  getUsuariosSinEliminar(): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(`${this.apiUrl}/consultarRegistrosSinEliminar`);
   }
 
   recuperarContrasenia(email: string): Observable<void> {
@@ -43,8 +52,5 @@ export class UsuarioService {
     const body = { email, nuevaContrasenia };
     return this.http.put<void>(`${this.apiUrl}/actualizar-contrasenia/${(this.encodedEmail)}`, body);
   }
-
-
-
 
 }

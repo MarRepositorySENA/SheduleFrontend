@@ -142,10 +142,10 @@ export class MenuComponent implements OnInit {
           icono: 'fa fa-shield-alt',
           vistas: [
             { nombre: 'Roles', ruta: 'seguridad/registro_role' },
-            { nombre: 'Usuarios y Roles', ruta: 'seguridad/registro_usuarios_roles' },
-            { nombre: 'Vistas y Roles', ruta: 'seguridad/registro_vistas_roles' },
-            { nombre: 'Personas y Usuarios', ruta: 'seguridad/registros_persona_usuario' },
-            { nombre: 'Modulos', ruta: 'seguridad/registros_modulo' }
+            { nombre: 'Usuarios y Roles', ruta: 'seguridad/registros_usuarios_roles' },
+            { nombre: 'Vistas y Roles', ruta: 'seguridad/registros_vistas_roles' },
+            { nombre: 'Personas', ruta: 'seguridad/registro_persona' },
+            { nombre: 'Modulos', ruta: 'seguridad/registro_modulo' }
           ]
         }
       ];

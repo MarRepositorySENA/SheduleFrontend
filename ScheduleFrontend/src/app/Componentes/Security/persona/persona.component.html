@@ -1,0 +1,52 @@
+<div class="form-carga-container">
+    <!-- Formulario de Persona -->
+    <div class="form-container">
+      <h2 class="text-center mb-4">{{ isEditing ? 'Editar Persona' : 'Registrar Persona' }}</h2>
+  
+      <form [formGroup]="personaForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label>Primer Nombre:</label>
+          <input type="text" formControlName="primerNombre" class="form-control" />
+        </div>
+  
+        <div class="mb-3">
+          <label>Primer Apellido:</label>
+          <input type="text" formControlName="primerApellido" class="form-control" />
+        </div>
+  
+        <div class="mb-3">
+          <label>Email:</label>
+          <input type="email" formControlName="email" class="form-control" />
+        </div>
+  
+        <div class="mb-3">
+          <label>Teléfono:</label>
+          <input type="text" formControlName="telefono" class="form-control" />
+        </div>
+  
+        <div class="mb-3">
+          <label>Dirección:</label>
+          <input type="text" formControlName="direccion" class="form-control" />
+        </div>
+  
+        <button type="submit" class="btn btn-primary">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
+      </form>
+    </div>
+  
+    <!-- Carga Masiva -->
+    <div class="carga-masiva-container">
+      <h3>Carga Masiva</h3>
+      <input type="file" (change)="onFileSelected($event)" class="form-control" />
+      <button class="btn btn-success mt-3" (click)="uploadExcel()">Subir Excel</button>
+    </div>
+  </div>
+  
+  <!-- Tabla de Personas -->
+  <div class="table-container mt-5">
+    <h2 class="text-center mb-4">Lista de Personas</h2>
+    <div class="table-responsive">
+      <app-table [headers]="headers" [data]="personas" (edit)="onEdit($event)" (delete)="onDelete($event)">
+      </app-table>
+    </div>
+  </div>
+  

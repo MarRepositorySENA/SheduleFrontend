@@ -10,8 +10,8 @@ import { CargaMasivaComponent } from '../../Componentes/Security/carga-masiva/ca
 import { UsuariosRolesComponent } from '../../Componentes/Security/usuarios-roles/usuarios-roles.component';
 import { VistasRolesComponent } from '../../Componentes/Security/vistas-roles/vistas-roles.component';
 import { VistaComponent } from '../../Componentes/Security/vista/vista.component';
-import { PersonaUsuarioComponent } from '../../Componentes/Security/persona-usuario/persona-usuario.component';
 import { ModuloComponent } from '../../Componentes/Security/modulo/modulo.component';
+import { PersonaComponent } from '../../Componentes/Security/persona/persona.component';
 
 
 @NgModule({
@@ -21,8 +21,8 @@ import { ModuloComponent } from '../../Componentes/Security/modulo/modulo.compon
     UsuariosRolesComponent,
     VistasRolesComponent, 
     VistaComponent,
-    PersonaUsuarioComponent,
     ModuloComponent,
+    PersonaComponent,
     CargaMasivaComponent
   ],
   imports: [
